@@ -110,7 +110,7 @@ function ParametersAlgorithm(Para,UserPara)
     #   - "Gradient" uses the standard gradient of the hamiltonian 
     #   - "ProbAdjust" scales the gradient by the inverse of the auxiliary variables
     #   - "Newton-Raphson" scales the gradient by the inverse of the Hessian
-    Para2["OptiType"] = "Gradient" 
+    Para2["OptiType"] = "Newton-Raphson" 
 
     Para2["IntegrationOrder"] = 4
     Para2["ParallelComputing"] = false

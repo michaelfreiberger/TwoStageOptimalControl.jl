@@ -13,10 +13,6 @@ S2(Stat_dist, Para::Dict) = 0
 
 
 MyPara = Dict()
-MyPara["OptiType"] = "Newton-Raphson"
-MyPara["ProbIndex"] = 2
-MyPara["IntegrationOrder"] = 4
-
 MyPara["T"] = 1
 MyPara["hstep"] = 0.05
 
@@ -47,6 +43,6 @@ Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
                                 SalvageFunction_1_2=S1,
                                 SalvageFunction_2_2=S2)
 
-SaveResults(Results,"test/TestModelBenchark.out")
+SaveResults(Results,"test/TestModelBenchmark")
 
 

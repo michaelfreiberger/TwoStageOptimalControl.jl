@@ -1,4 +1,4 @@
-module TwoStageOptControl
+module TwoStageOptimalControl
 
     using BenchmarkTools
     using ColorSchemes
@@ -12,6 +12,7 @@ module TwoStageOptControl
     using Printf
     using Profile
     using Serialization
+    using JLD2
 
     include("AuxiliaryFunction.jl")
     include("LineSearch.jl")

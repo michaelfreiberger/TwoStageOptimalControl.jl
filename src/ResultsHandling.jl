@@ -188,12 +188,8 @@ end
     Save the Results Dictionary to filepath
 """
 function SaveResults(Results::Dict,filepath)
-
     Results["Para"]["SavePlotPath"] = filepath
-
-    open(string(filepath,".out"),"w") do f
-        serialize(f,Results)
-    end
+    save(string(filepath,".jld2"),Results)
 end
 
 """
@@ -202,9 +198,6 @@ end
     Load the Results Dictionary from the filepath
 """
 function LoadResults(filepath)
-    Results = Dict()
-    open(string(filepath,".out")) do f
-        Results = deserialize(f)
-    end
+    Results = load(string(filepath,".jld2"))
     return Results
 end

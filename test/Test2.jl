@@ -36,13 +36,11 @@ MyPara["OptiType"] = "Newton-Raphson"
 MyPara["ProbIndex"] = 2
 
 MyPara["InitLineStep"] = 1e-5
-MyPara["UpperLineStep"] = 1e-1
+MyPara["UpperLineStep"] = 1e-2
 MyPara["hLowBound"] = 0.1
 MyPara["PlotResultsIntermediateFrequency"] = 150
 
 MyPara["LoadInits"] = true
-
-#MyPara["IntegrationOrder"] = 4
 
 Results = Dict()
 Results["Con"] = 6.0*ones(1,10,1)
@@ -56,4 +54,4 @@ Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
                                 SalvageFunction_1_2=S1,
                                 SalvageFunction_2_2=S2)
 
-SaveResults(Results,"test/CapitalAccumulationBenchark.out")
+SaveResults(Results,"test/CapitalAccumulationBenchmark")
