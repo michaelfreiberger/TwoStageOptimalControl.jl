@@ -40,6 +40,29 @@ function PlotResults(Results2::Dict;SavePlot=false,Display=true,sizeX=600,sizeY=
     dHam = Results["dHam"]
     Para = Results["Para"]
 
+    for ii = 1:Para["nTime"]
+        for kk = 1:Para["nCon"]
+            if Con[1,ii,kk] >= Para["ConMin"][kk]
+                dHam[1,ii,kk] = max(dHam[1,ii,kk],0)
+            elseif Con[1,ii,kk] <= Para["ConMax"][kk]
+                dHam[1,ii,kk] = min(dHam[1,ii,kk],0)
+            end
+        end
+    end
+
+    for ii = 1:Para["nTime"]
+        for jj = ii:Para["nTime"]
+            for kk = 1:Para["nCon_dist"]
+                if Con_dist[ii,jj,kk] <= Para["Con_distMin"][kk]
+                    dHam_dist[ii,jj,kk] = max(dHam_dist[ii,jj,kk],0)
+                elseif Con_dist[ii,jj,kk] >= Para["Con_distMax"][kk]
+                    dHam_dist[ii,jj,kk] = min(dHam_dist[ii,jj,kk],0)
+                end
+            end
+        end
+    end 
+
+    
     PLOTS = Dict();
 
     nPlotHelp = min(Para["nTime"],Para["nVintagePlot"])

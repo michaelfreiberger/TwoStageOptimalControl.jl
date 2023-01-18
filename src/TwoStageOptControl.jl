@@ -1,19 +1,17 @@
 module TwoStageOptControl
 
-    using LinearAlgebra
+    using BenchmarkTools
+    using ColorSchemes
+    using Coverage
+    using Dierckx
     using ForwardDiff
     using Interpolations
-
-    using Plots
-    using ColorSchemes
     using LaTeXStrings
+    using LinearAlgebra
+    using Plots
     using Printf
-
-    using Serialization
-    using Dierckx
-    using BenchmarkTools
     using Profile
-    using Coverage
+    using Serialization
 
     include("AuxiliaryFunction.jl")
     include("LineSearch.jl")
@@ -25,7 +23,8 @@ module TwoStageOptControl
 
 
     export LineSearch
-    export VintageOptimisation
+    export TwoStageOptimisation
     export PlotResults
-
+    export SaveResults
+    export LoadResults
 end

@@ -127,7 +127,7 @@ function ParametersAlgorithm(Para,UserPara)
     # Lower bound for step in gradient search -> termination if undercut
     Para2["stepLowBound"] = 1e-8   
     # Lower bound for the gradient -> termination if undercut
-    Para2["GradBound"] = 1e-5
+    Para2["GradBound"] = 1e-6
     # Max iterations with same step-size h
     Para2["MaxOptiIter"] = 10000                   
     # Max iterations along the same gradient 

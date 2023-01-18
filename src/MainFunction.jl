@@ -1,5 +1,4 @@
 
-
 """
     TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
                     ObjectiveIntegrand2 = ObjectiveIntegrand,AggregationFunction2 = AggregationFunction,
@@ -9,9 +8,13 @@
     
 """
 function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
-                    ObjectiveIntegrand2 = ObjectiveIntegrand,AggregationFunction2 = AggregationFunction,
-                    StateDynamic_1_2 = StateDynamic_1, StateDynamic_2_2 = StateDynamic_2, Shock2 = Shock,
-                    SalvageFunction_1_2 = SalvageFunction_1, SalvageFunction_2_2 = SalvageFunction_2)
+                    ObjectiveIntegrand2 = (C1, S1, t::Float64, Para::Dict) -> 0,
+                    AggregationFunction2 = (C2, S2, t::Float64,s::Float64, Para::Dict) -> 0,
+                    StateDynamic_1_2 = (C1, S1, t::Float64, Para::Dict) -> 0, 
+                    StateDynamic_2_2 = (C2, S2, t::Float64, s::Float64, Para::Dict) -> 0, 
+                    Shock2 = (C1, S1, t::Float64, Para::Dict) -> 0,
+                    SalvageFunction_1_2 = (S1, Para::Dict) -> 0, 
+                    SalvageFunction_2_2 = (S2, Para::Dict) -> 0)
     
     
     # Set up dictionary with all parameters either from the base values or user-specific values
@@ -22,7 +25,6 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
     ParametersAlgorithm(Para,UserParameters)
     ParametersInitStates(Para,UserParameters)
     ParametersPlots(Para,UserParameters)
-    ParametersFunctions(Para,UserParameters)
     for kk in keys(UserParameters)
         if !(kk in keys(Para))
             Para[kk] = UserParameters[kk]
@@ -168,11 +170,13 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
 
 
         impr = 1
-        while Para["OptiIter"] <= Para["MaxOptiIter"] && Step > Para["stepLowBound"] && impr==1  # basic iteration loop
+        maxabsgradient = Inf
+        while Para["OptiIter"] <= Para["MaxOptiIter"] && Step > Para["stepLowBound"] && impr==1 && maxabsgradient > Para["GradBound"]
 
             ObjValue = ObjectValue(Con,Stat,Con_dist,Stat_dist,Stat_agg,Para)
             costate_PDE_solver(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,CoStat_agg,Para)
             GradHamiltonian(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
+            maxabsgradient = maxabsGradient(Con,Con_dist,dHam,dHam_dist,Para)
             NewDirection(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
 
             # Linesearch along the gradient for a better set of controls

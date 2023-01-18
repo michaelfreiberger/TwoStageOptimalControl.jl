@@ -13,7 +13,6 @@ S2(Stat_dist, Para::Dict) = 0
 
 
 MyPara = Dict()
-MyPara["OptiType"] = "ProbAdjust"
 MyPara["OptiType"] = "Newton-Raphson"
 MyPara["ProbIndex"] = 2
 MyPara["IntegrationOrder"] = 4
@@ -32,14 +31,14 @@ MyPara["Con_distMin"] = [0.0]
 MyPara["InitLineStep"] = 1e-5
 MyPara["UpperLineStep"] = 1e-1
 MyPara["hLowBound"] = 0.01
-MyPara["PlotResultsIntermediateFrequency"] = 150
+MyPara["PlotResultsIntermediateFrequency"] = 30
 
 MyPara["LoadInits"] = true
 
 Results = Dict()
 Results["Con"] = 4.0*ones(1,20,1)
 Results["Con_dist"] = 4.0*ones(20,20,1)
-Results = VintageOptimisation(Results = Results,UserParameters = MyPara,
+Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
                                 ObjectiveIntegrand2 = U, 
                                 AggregationFunction2 = Q,
                                 StateDynamic_1_2 = f1,
@@ -48,20 +47,6 @@ Results = VintageOptimisation(Results = Results,UserParameters = MyPara,
                                 SalvageFunction_1_2=S1,
                                 SalvageFunction_2_2=S2)
 
+SaveResults(Results,"test/TestModelBenchark.out")
 
-
-Results2 = Dict()
-Results2 = VintageOptimisation(Results = Results2,UserParameters = MyPara,
-                ObjectiveIntegrand2 = U, 
-                AggregationFunction2 = Q,
-                StateDynamic_1_2 = f1,
-                StateDynamic_2_2 = f2, 
-                Shock2 = g,
-                SalvageFunction_1_2=S1,
-                SalvageFunction_2_2=S2)
-
-
-SaveResults(Results,"Test")
-
-Results = LoadResults("Test")
 

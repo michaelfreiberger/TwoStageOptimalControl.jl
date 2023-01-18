@@ -183,3 +183,38 @@ function AssignBest(ObjValue::Float64,Con::Array{Float64,3},Stat::Array{Float64,
 
     return ObjValue, step
 end
+
+
+
+function maxabsGradient(Con::Array{Float64,3},Con_dist::Array{Float64,3},dHam::Array{Float64,3},dHam_dist::Array{Float64,3},Para::Dict)
+    dHam_abs = zeros(1,Para["nTime"],Para["nCon"])
+    dHam_dist_abs = zeros(Para["nTime"],Para["nTime"],Para["nCon"])
+    
+    for ii = 1:Para["nTime"]
+        for kk = 1:Para["nCon"]
+            if Con[1,ii,kk] >= Para["ConMin"][kk]
+                dHam_abs[1,ii,kk] = abs(max(dHam[1,ii,kk],0))
+            elseif Con[1,ii,kk] <= Para["ConMax"][kk]
+                dHam_abs[1,ii,kk] = abs(min(dHam[1,ii,kk],0))
+            else
+                dHam_abs[1,ii,kk] = abs(dHam[1,ii,kk])
+            end
+        end
+    end
+
+    for ii = 1:Para["nTime"]
+        for jj = ii:Para["nTime"]
+            for kk = 1:Para["nCon_dist"]
+                if Con_dist[ii,jj,kk] <= Para["Con_distMin"][kk]
+                    dHam_dist_abs[ii,jj,kk] = abs(max(dHam_dist[ii,jj,kk],0))
+                elseif Con_dist[ii,jj,kk] >= Para["Con_distMax"][kk]
+                    dHam_dist_abs[ii,jj,kk] = abs(min(dHam_dist[ii,jj,kk],0))
+                else
+                    dHam_dist_abs[ii,jj,kk] = abs(dHam_dist[ii,jj,kk])
+                end
+            end
+        end
+    end 
+
+    return max(maximum(dHam_abs),maximum(dHam_dist_abs))
+end
