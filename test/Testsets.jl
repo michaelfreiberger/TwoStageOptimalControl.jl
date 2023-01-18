@@ -40,7 +40,6 @@ using Test
     @test maxCostateDifference < 1e-6
 end
 
-
 @testset "Test model" begin
     # Test code for a test model without shock
 
