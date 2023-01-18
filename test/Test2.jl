@@ -1,3 +1,4 @@
+using TwoStageOptimalControl
 
 U(Con, Stat, t::Float64, Para::Dict) = Stat[2] * ((Para["A"] - Stat[1])*Stat[1] - Para["b"]*Con[1] - Para["c"]/2*Con[1]^2)
 Q(Con,Stat, t::Float64,s::Float64, Para::Dict) = Stat[2] * ((Para["A"] - Stat[1])*Stat[1] - Para["b"]*Con[1] - Para["c"]/2*Con[1]^2)

@@ -245,6 +245,8 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
     NewDirection(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
 
     AssignResults(Results, Con, Stat, Con_dist, Stat_dist, Stat_agg, CoStat, CoStat_dist, dHam, dHam_dist, Para)
-    PlotResults(Results;SavePlot = Para["SavePlot"])
+    if Para["PlotResultsFinal"] == true
+        PlotResults(Results;SavePlot = Para["SavePlot"])
+    end
     return Results
 end

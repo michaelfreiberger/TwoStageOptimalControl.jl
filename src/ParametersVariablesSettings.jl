@@ -199,6 +199,7 @@ function ParametersPlots(Para,UserPara)
     Para2["nVintagePlot"] = 10                      # Number of vintages plotted for realtime solutions
     Para2["PlotResultsStart"] = true
     Para2["PlotResultsIntermediate"] = true             # Indicator if intermediate results are plotted
+    Para2["PlotResultsFinal"] = true
     Para2["PlotResultsIntermediateFrequency"] = 40
     Para2["PlotResultsWaitForKey"] = false
     Para2["SavePlot"] = false                           # Indicator if plotted results should be exported and saved
