@@ -1,20 +1,20 @@
 
 """
     TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
-                    ObjectiveIntegrand2 = ObjectiveIntegrand,AggregationFunction2 = AggregationFunction,
-                    StateDynamic_1_2 = StateDynamic_1, StateDynamic_2_2 = StateDynamic_2, Shock2 = Shock,
-                    SalvageFunction_1_2 = SalvageFunction_1, SalvageFunction_2_2 = SalvageFunction_2)
+                    ObjectiveIntegrand = ObjectiveIntegrand,AggregationFunction = AggregationFunction,
+                    StateDynamic_1 = StateDynamic_1, StateDynamic_2 = StateDynamic_2, Shock = Shock,
+                    SalvageFunction_1 = SalvageFunction_1, SalvageFunction_2 = SalvageFunction_2)
 
     
 """
 function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
-                    ObjectiveIntegrand2 = (C1, S1, t::Float64, Para::Dict) -> 0,
-                    AggregationFunction2 = (C2, S2, t::Float64,s::Float64, Para::Dict) -> 0,
-                    StateDynamic_1_2 = (C1, S1, t::Float64, Para::Dict) -> 0, 
-                    StateDynamic_2_2 = (C2, S2, t::Float64, s::Float64, Para::Dict) -> 0, 
-                    Shock2 = (C1, S1, t::Float64, Para::Dict) -> 0,
-                    SalvageFunction_1_2 = (S1, Para::Dict) -> 0, 
-                    SalvageFunction_2_2 = (S2, Para::Dict) -> 0)
+                    ObjectiveIntegrand = (C1, S1, t::Float64, Para::Dict) -> 0,
+                    AggregationFunction = (C2, S2, t::Float64,s::Float64, Para::Dict) -> 0,
+                    StateDynamic_1 = (C1, S1, t::Float64, Para::Dict) -> 0, 
+                    StateDynamic_2 = (C2, S2, t::Float64, s::Float64, Para::Dict) -> 0, 
+                    Shock = (C1, S1, t::Float64, Para::Dict) -> 0,
+                    SalvageFunction_1 = (S1, Para::Dict) -> 0, 
+                    SalvageFunction_2 = (S2, Para::Dict) -> 0)
     
     
     # Set up dictionary with all parameters either from the base values or user-specific values
@@ -38,54 +38,54 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
     # Check wether all the function supplied by the user have the right dimensions
     SystemCheck = 1
 
-    if !(ObjectiveIntegrand2(Con[1,1,:],Stat[1,1,:],0.0,Para) isa Number)
+    if !(ObjectiveIntegrand(Con[1,1,:],Stat[1,1,:],0.0,Para) isa Number)
         global ObjectiveIntegrand = (Con,Stat, t::Float64, Para::Dict) -> 0.0
         println("Warning: Objective Function is not a number! Objective Function is set to 0")
         SystemCheck = 0
     else
-        global ObjectiveIntegrand = ObjectiveIntegrand2
+        global ObjectiveIntegrand = ObjectiveIntegrand
     end
-    if !(AggregationFunction2(Con[1,1,:],Stat[1,1,:],0.0,0.0,Para) isa Number)
+    if !(AggregationFunction(Con[1,1,:],Stat[1,1,:],0.0,0.0,Para) isa Number)
         global AggregationFunction = (Con,Stat, t::Float64,s::Float64, Para::Dict) -> 0.0
         println("Warning: Aggregation Function is not a number! Aggregation Function is set to 0")
         SystemCheck = 0
     else
-        global AggregationFunction = AggregationFunction2
+        global AggregationFunction = AggregationFunction
     end
-    if size(StateDynamic_1_2(Con[1,1,:],Stat[1,1,:],0.0,Para),1) != Para["nStat"]
+    if size(StateDynamic_1(Con[1,1,:],Stat[1,1,:],0.0,Para),1) != Para["nStat"]
         global StateDynamic_1 = (Con,Stat, t::Float64, Para::Dict) -> zeros(Para["nStat"])
         println("Warning: Dimensions of State Dynamics (Stage 1) do not match! Dynamics are set to 0")
         SystemCheck = 0
     else
-        global StateDynamic_1 = StateDynamic_1_2
+        global StateDynamic_1 = StateDynamic_1
     end
-    if size(StateDynamic_2_2(Con_dist[1,1,:],Stat_dist[1,1,:],0.0,0.0,Para),1) != Para["nStat_dist"]
+    if size(StateDynamic_2(Con_dist[1,1,:],Stat_dist[1,1,:],0.0,0.0,Para),1) != Para["nStat_dist"]
         global StateDynamic_2 = (Con_dist,Stat_dist, t::Float64, s::Float64, Para::Dict) -> zeros(Para["nStat_dist"])
         println("Warning: Dimensions of State Dynamics (Stage 2) do not match! Dynamics are set to 0")
         SystemCheck = 0
     else
-        global StateDynamic_2 = StateDynamic_2_2
+        global StateDynamic_2 = StateDynamic_2
     end
-    if size(Shock2(Con[1,1,:],Stat[1,1,:],0.0,Para),1) != Para["nStat_dist"]
+    if size(Shock(Con[1,1,:],Stat[1,1,:],0.0,Para),1) != Para["nStat_dist"]
         global Shock = (Con, Stat, t::Float64, Para::Dict) -> zeros(Para["nStat_dist"])
         println("Warning: Shock Transition dimensions do not math! Transition is set to 0!")
         SystemCheck = 0
     else
-        global Shock = Shock2
+        global Shock = Shock
     end
-    if !(SalvageFunction_1_2(Stat[1,1,:],Para) isa Number)
+    if !(SalvageFunction_1(Stat[1,1,:],Para) isa Number)
         global SalvageFunction_1 = (Stat,Para::Dict) -> 0.0
         println("Warning: Salvage Function (Stage 1) is not a number! Salvage Function is set to 0")
         SystemCheck = 0
     else
-        global SalvageFunction_1 = SalvageFunction_1_2
+        global SalvageFunction_1 = SalvageFunction_1
     end
-    if !(SalvageFunction_2_2(Stat_dist[1,1,:],Dict()) isa Number)
+    if !(SalvageFunction_2(Stat_dist[1,1,:],Dict()) isa Number)
         global SalvageFunction_2 = (Stat,Para::Dict) -> 0.0
         println("Warning: Salvage Function (Stage 2) is not a number! Salvage Function is set to 0")
         SystemCheck = 0
     else
-        global SalvageFunction_2 = SalvageFunction_2_2
+        global SalvageFunction_2 = SalvageFunction_2
     end
     
     # Return error message if some dimensions do not match
