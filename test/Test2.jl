@@ -47,12 +47,12 @@ Results = Dict()
 Results["Con"] = 6.0*ones(1,10,1)
 Results["Con_dist"] = 6.0*ones(10,10,1)
 Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
-                                ObjectiveIntegrand2 = U, 
-                                AggregationFunction2 = Q,
-                                StateDynamic_1_2 = f1,
-                                StateDynamic_2_2 = f2, 
-                                Shock2 = g,
-                                SalvageFunction_1_2=S1,
-                                SalvageFunction_2_2=S2)
+                                ObjectiveIntegrand = U, 
+                                AggregationFunction = Q,
+                                StateDynamic_1 = f1,
+                                StateDynamic_2 = f2, 
+                                Shock = g,
+                                SalvageFunction_1=S1,
+                                SalvageFunction_2=S2)
 
 SaveResults(Results,"test/CapitalAccumulationBenchmark")
