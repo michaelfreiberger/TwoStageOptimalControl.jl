@@ -88,7 +88,7 @@ end
 """
     CumInteg4(n::Int64,h::Float64,F)
 
-    CumInteg4 calculates the cumulative integrals ``\\int_0^t F(t)dt \\forall t\\in(0,T)`` of `F` using a 4th order integration method.
+    CumInteg4 calculates the cumulative integrals ``\\int_0^t F(s)ds \\forall t\\in(0,T)`` of `F` using a 4th order integration method.
     `n` = number of datapoints,
     `h` = distance between datapoints.
 """
