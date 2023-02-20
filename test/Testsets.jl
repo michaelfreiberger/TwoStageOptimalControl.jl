@@ -25,11 +25,11 @@ using Test
     Results["Con_dist"] = 3.0*ones(100,100,1)
     
     Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
-                                ObjectiveIntegrand = U, 
-                                AggregationFunction = Q,
-                                StateDynamic_1 = f1,
-                                StateDynamic_2 = f2, 
-                                Shock = g)
+                                ObjectiveIntegrand1 = U, 
+                                AggregationIntegrand2 = Q,
+                                StateDynamic1 = f1,
+                                StateDynamic2 = f2, 
+                                Shock12 = g)
 
     maxControlDifference = max(maximum(abs.(Results["Con"]-ResultsBenchmark["Con"])),
                                maximum(abs.(Results["Con_dist"]-ResultsBenchmark["Con_dist"])))
@@ -69,11 +69,11 @@ end
     Results["Con_dist"] = 6.0*ones(100,100,1)
     
     Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
-                                ObjectiveIntegrand = U, 
-                                AggregationFunction = Q,
-                                StateDynamic_1 = f1,
-                                StateDynamic_2 = f2, 
-                                Shock = g)
+                                ObjectiveIntegrand1 = U, 
+                                AggregationIntegrand2 = Q,
+                                StateDynamic1 = f1,
+                                StateDynamic2 = f2, 
+                                Shock12 = g)
 
     maxControlDifference = max(maximum(abs.(Results["Con"]-ResultsBenchmark["Con"])),
                                maximum(abs.(Results["Con_dist"]-ResultsBenchmark["Con_dist"])))
