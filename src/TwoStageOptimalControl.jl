@@ -13,6 +13,7 @@ module TwoStageOptimalControl
     using Profile
     using Serialization
     using JLD2
+    using FileIO
 
     include("AuxiliaryFunction.jl")
     include("LineSearch.jl")
