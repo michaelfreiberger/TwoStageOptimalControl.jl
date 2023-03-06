@@ -1,0 +1,25 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Two-Stage-Optimal-Control
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Michael
+    family-names: Freiberger
+    email: freiberger@iiasa.ac.at
+    orcid: 'https://orcid.org/0000-0002-7253-3282'
+    affiliation: IIASA
+repository-code: >-
+  https://github.com/michaelfreiberger/TwoStageOptimalControl.jl
+abstract: >-
+  This is a Julia-package for the solution of Two-Stage
+  optimal control problems with random switching time.
+keywords:
+  - Optimal control
+  - Vintage-structure
+  - Age-structure
+license: Apache-2.0
