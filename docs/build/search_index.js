@@ -1,3 +1,3 @@
 var documenterSearchIndex = {"docs":
-[]
+[{"location":"#TwoStageOptimalControl","page":"Home","title":"TwoStageOptimalControl","text":"","category":"section"},{"location":"#Package-Features","page":"Home","title":"Package Features","text":"","category":"section"},{"location":"#Function-Documentation","page":"Home","title":"Function Documentation","text":"","category":"section"},{"location":"","page":"Home","title":"Home","text":"TwoStageOptimisation","category":"page"},{"location":"#TwoStageOptimalControl.TwoStageOptimisation","page":"Home","title":"TwoStageOptimalControl.TwoStageOptimisation","text":"TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),\n                ObjectiveIntegrand1,AggregationIntegrand2,StateDynamic1, StateDynamic2, Shock12,\n                SalvageFunction1, SalvageFunction2)\n\n\n\n\n\n","category":"function"}]
 }

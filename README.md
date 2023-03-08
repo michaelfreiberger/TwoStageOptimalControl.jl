@@ -118,7 +118,7 @@ $$
 \dot{Z}(t) = -\eta(t,C_1,S_1)\cdot Z(t)
 $$
 
-Overall this problem type can be transformed into a vintage-structed optimal control problem presented above. For details see the work of [Wrzaczek, Kuhn and Frankovic (2020)](https://link.springer.com/article/10.1007/s10957-019-01598-5)
+Overall this problem type can be transformed into a vintage-structed optimal control problem presented above. For details see the work of [Wrzaczek, Kuhn and Frankovic (2020)](https://link.springer.com/article/10.1007/s10957-019-01598-5).
 
 # Planned extensions of the toolbox
 

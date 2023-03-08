@@ -1,3 +1,16 @@
-using Documenter, TwoStageOptimalControl
+push!(LOAD_PATH,"../src/")
+using TwoStageOptimalControl
 
-makedocs(sitename="My Documentation")
+using Documenter
+
+makedocs(
+        sitename="TwoStageOptimalControl.jl",
+        modules  = [TwoStageOptimalControl],
+        pages=[
+                "Home" => "index.md"
+               ]
+        )
+
+deploydocs(;
+        repo = "github.com/michaelfreiberger/TwoStageOptimalControl.jl")
+

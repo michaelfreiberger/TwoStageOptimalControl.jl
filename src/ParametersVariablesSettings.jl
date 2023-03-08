@@ -3,6 +3,15 @@
     ParametersBasics(Para,UserPara)
 
     Initialize the basic parameters necessary for the model
+
+    T -> time horizon of the model
+    hstep -> time step between points
+    rho -> time discount rate of the model
+    nCon -> number of controls in the first stage
+    nCon_dist -> number of controls in the second stage
+    nStat -> number of state variables in the first stage
+    nStat_dist -> number of state variables in the second stage
+    ProbIndex -> index of state variable describing the auxiliary variables in both stages
 """
 function ParametersBasics(Para,UserPara)
     #= --------------------------------------------------------------
