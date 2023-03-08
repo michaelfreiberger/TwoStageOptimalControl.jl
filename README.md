@@ -22,13 +22,25 @@ For information on how to use the toolbox, please take a look into the documenta
 This package is designed to solve problems of the form
 
 $$ 
-\max_{C_1: [0,T]\to\mathbb{R}^{n_1},\quad C_2:[0,T]^2\to\mathbb{R}^{n_2}}\int_{0}^{\tau} \exp(-\rho t)\Big[F_1(t,C_1(t),S_1(t)) + Q(t) \Big]dt + \\
-\hspace{4cm} + D_1(S(T)) + \int_0^T D_2(S_2(T,s))ds \\
-s.t. \qquad\dot{S_1}(t) = g_1(t,C_1(t),S_1(t)) ,\hspace{2cm} S_1(0) = S_1^0\\
-\hspace{3cm} \frac{d}{dt} S_2(t,s) = g_2(t,s,C_2(t,s),S_2(t,s)) ,\qquad S_2(s,s) = h(s,C_1(s),S_1(s))\\
-\qquad \qquad Q(t) = \int_0^t F_2(t,s,C_2(t,s),S_2(t,s)) ds \\
-\underline{C_1}(i) \leq C_{1,i}(t) \leq \overline{C_1}(i) \qquad\forall i = 1,\ldots,n_1\\
-\underline{C_2}(i) \leq C_{2,i}(t,s) \leq \overline{C_2}(i) \qquad\forall i = 1,\ldots,n_2\\
+\max_{C_1: [0,T]\to\mathbb{R}^{n_1},\quad C_2:[0,T]^2\to\mathbb{R}^{n_2}}\int_{0}^{\tau} \exp(-\rho t)\Big[F_1(t,C_1(t),S_1(t)) + Q(t) \Big]dt +
+$$
+$$
+\hspace{4cm} + D_1(S(T)) + \int_0^T D_2(S_2(T,s))ds
+$$
+$$
+s.t. \qquad\dot{S_1}(t) = g_1(t,C_1(t),S_1(t)) ,\hspace{2cm} S_1(0) = S_1^0
+$$
+$$
+\hspace{3cm} \frac{d}{dt} S_2(t,s) = g_2(t,s,C_2(t,s),S_2(t,s)) ,\qquad S_2(s,s) = h(s,C_1(s),S_1(s))
+$$
+$$
+\qquad \qquad Q(t) = \int_0^t F_2(t,s,C_2(t,s),S_2(t,s)) ds
+$$
+$$
+\underline{C_1}(i) \leq C_{1,i}(t) \leq \overline{C_1}(i) \qquad\forall i = 1,\ldots,n_1
+$$
+$$
+\underline{C_2}(i) \leq C_{2,i}(t,s) \leq \overline{C_2}(i) \qquad\forall i = 1,\ldots,n_2
 $$
 
 ## Variable and function explanations
