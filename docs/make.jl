@@ -1,7 +1,5 @@
 push!(LOAD_PATH,"../src/")
-using TwoStageOptimalControl
-
-using Documenter
+using Documenter, TwoStageOptimalControl
 
 makedocs(
         sitename="TwoStageOptimalControl.jl",
