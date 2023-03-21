@@ -25,6 +25,9 @@ end
     PlotResults(Results2::Dict;SavePlot=false,Display=true,sizeX=600,sizeY=400)
 
     Basic plots of all controls + gradient and state + costate variables
+    SavePlot -> Indicator whether plots should be saved to location specifice in Para["SavePlotPath"]
+    Display  -> Should the plots be displayed or supressed.
+    sizeX, sizeY -> dimensions of the plots. Default = 600x400
 """
 function PlotResults(Results2::Dict;SavePlot=false,Display=true,sizeX=600,sizeY=400)
 

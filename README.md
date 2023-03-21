@@ -9,9 +9,10 @@ This is a Julia-package which allows for the solution of two-stage optimal contr
 
 The package is currently in submission to the Julia repository. Until acceptance, you are able to directly install the package from my Github-Repo by using the following commands in Julia:
 
-> `using Pkg`
->
-> `Pkg.add(url="https://github.com/michaelfreiberger/TwoStageOptimalControl.jl")`
+```julia-repl
+julia> using Pkg
+julia> Pkg.add(url="https://github.com/michaelfreiberger/TwoStageOptimalControl.jl")
+```
 
 # Documentation
 

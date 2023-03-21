@@ -1,7 +1,10 @@
 """
-    integ4(n::Int64,h::Float64,F)
+    integ4(n::Int64,
+           h::Float64,
+           F)
 
-    integ4 performs 4th order integration (Simpson-method) method for datavector `F` with `n` points with a distance of `h` between each of them.
+    integ4 performs 4th order integration (Simpson-method) method for 
+    datavector `F` with `n` points with a distance of `h` between each of them.
     If n > 1 and F = 1, F will be interpreted as a constant function over the n points.
 """
 function integ4(n::Int64,h::Float64,F)
@@ -41,7 +44,9 @@ function integ4(n::Int64,h::Float64,F)
 end
 
 """
-    integ1(n::Int64,h::Float64,F)
+    integ1(n::Int64,
+           h::Float64,
+           F)
 
     integ1 performs 1st order left boundary integration method for datavector `F` with `n` points with a distance of `h` between each of them.
     If n > 1 and F = 1, F will be interpreted as a constant function over the n points.
@@ -64,9 +69,12 @@ function integ1(n::Int64,h::Float64,F)
 end
 
 """
-    integ2(n::Int64,h::Float64,F)
+    integ2(n::Int64,
+           h::Float64,
+           F)
 
-    integ2 performs 2nd order integration (trapezoid) method for datavector `F` with `n` points with a distance of `h` between each of them.
+    integ2 performs 2nd order integration (trapezoid) method for datavector `F` 
+    with `n` points with a distance of `h` between each of them.
     If n > 1 and F = 1, F will be interpreted as a constant function over the n points.
 """
 function integ2(n::Int64,h::Float64,F)
@@ -86,7 +94,9 @@ end
 
 
 """
-    CumInteg4(n::Int64,h::Float64,F)
+    CumInteg4(n::Int64,
+              h::Float64,
+              F)
 
     CumInteg4 calculates the cumulative integrals ``\\int_0^t F(s)ds \\forall t\\in(0,T)`` of `F` using a 4th order integration method.
     `n` = number of datapoints,
@@ -130,7 +140,9 @@ end
 
 
 """
-    interp1(xpt,ypt;method = "Linear",extrapolation = Flat())
+    interp1(xpt,ypt;
+            method = "Linear",
+            extrapolation = Flat())
 
     One dimensional interpolation using either linear interpolation or BSplines
 """
@@ -173,7 +185,10 @@ end
 
 
 """
-    SavitskyGolaySmoothing(x::Vector, windowSize::Integer, polyOrder::Integer; deriv::Integer=0)
+    SavitskyGolaySmoothing(x::Vector, 
+                           windowSize::Integer, 
+                           polyOrder::Integer; 
+                           deriv::Integer=0)
 
     Smooth a vector x using the Savitsky-Golay method
 """
@@ -210,9 +225,11 @@ end
 
 
 """
-    ParaAdjust(h_global::Float64,Para::Dict) --> VOID function
+    ParaAdjust(h_global::Float64,
+               Para::Dict)
 
-    ParaAdjust adjust all relevant elements of the Parameter dictionary `Para` to the step-size `h_global`.
+    ParaAdjust adjust all relevant elements of the 
+    Parameter dictionary `Para` to the step-size `h_global`.
     No Output as entries of `Para` get overwritten
 """
 function ParaAdjust(h_global::Float64,Para::Dict)
@@ -229,9 +246,11 @@ end
 
 
 """
-    LoadVariables(Para,Results)
+    LoadVariables(Para,
+                  Results)
 
-    Load inital profiles for the control variables from the Results dictionary and use interpolation if necessary
+    Load inital profiles for the control variables from the 
+    Results dictionary and use interpolation if necessary
 """
 function LoadVariables(Para,Results)
 
@@ -248,11 +267,12 @@ function LoadVariables(Para,Results)
 end
 
 """
-    ConInterpol(Con_dist::Array{Float64,3},Con::Array{Float64,3},Para::Dict)
+    ConInterpol(Con_dist::Array{Float64,3},
+                Con::Array{Float64,3},
+                Para::Dict)
 
-    Given Controls `Con_dist` and `Con`, ConInterpol performs an interpolation of these fields to fit the passed Parameter dict `Para`.
-
-    Outputs: New Controls 'Con_dist_new' and `Con_new`
+    Given Controls `Con_dist` and `Con`, ConInterpol performs 
+    an interpolation of these fields to fit the passed Parameter dict `Para`.
 """
 function ConInterpol(Con::Array{Float64,3},Con_dist::Array{Float64,3},Para::Dict)
 
@@ -334,7 +354,9 @@ function ConInterpol(Con::Array{Float64,3},Con_dist::Array{Float64,3},Para::Dict
 end
 
 """
-    ConSmooth(Con::Array{Float64,3},Con_dist::Array{Float64,3},Para::Dict)
+    ConSmooth(Con::Array{Float64,3},
+              Con_dist::Array{Float64,3},
+              Para::Dict)
 
     Smooth the profiles of the control variables using a SavitskyGolaySmoother
 """
@@ -369,7 +391,9 @@ function ConSmooth(Con::Array{Float64,3},Con_dist::Array{Float64,3},Para::Dict)
 end
 
 """
-    GradSmooth(dHam::Array{Float64,3},dHam_dist::Array{Float64,3},Para::Dict)
+    GradSmooth(dHam::Array{Float64,3},
+               dHam_dist::Array{Float64,3},
+               Para::Dict)
 
     Smooth the gradient by using the median value of a moving window.
 """

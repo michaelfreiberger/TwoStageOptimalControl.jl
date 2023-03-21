@@ -4,14 +4,14 @@
 
     Initialize the basic parameters necessary for the model
 
-    T -> time horizon of the model
-    hstep -> time step between points
-    rho -> time discount rate of the model
-    nCon -> number of controls in the first stage
-    nCon_dist -> number of controls in the second stage
-    nStat -> number of state variables in the first stage
-    nStat_dist -> number of state variables in the second stage
-    ProbIndex -> index of state variable describing the auxiliary variables in both stages
+    T           -> time horizon of the model
+    hstep       -> time step between points
+    rho         -> time discount rate of the model
+    nCon        -> number of controls in the first stage
+    nCon_dist   -> number of controls in the second stage
+    nStat       -> number of state variables in the first stage
+    nStat_dist  -> number of state variables in the second stage
+    ProbIndex   -> index of state variable describing the auxiliary variables in both stages
 """
 function ParametersBasics(Para,UserPara)
     #= --------------------------------------------------------------
@@ -55,6 +55,11 @@ end
     ParametersGrids(Para,UserPara)
 
     Initialize the parameters associated with the time grids
+
+    nTime -> Number of gridpoints along time
+    nAge  -> Number of gridpoints along the vintages
+    tmesh -> Grid for time
+    amesh -> Grid for vintages
 """
 function ParametersGrids(Para,UserPara)
     Para2 = Dict()
@@ -80,6 +85,14 @@ end
     ParametersControls(Para,UserPara)
 
     Initialize the parameters associated with the control variables
+
+    LoadInits   -> Loading specific initial guesses for the control variables
+    Reduce1     -> Indices of controls, which should be disabled (Stage 1)
+    Reduce2     -> Indices of controls, which should be disabled (Stage 2)
+    ConMin      -> Lower bound for the concentated control variables
+    ConMax      -> Upper bound for the concentated control variables
+    Con_distMin -> Lower bound for the distributed control variables
+    Con_distMax -> Upper bound for the distributed control variables
 """
 function ParametersControls(Para,UserPara)
     Para2 = Dict()
@@ -109,6 +122,32 @@ end
     ParametersAlgorithm(Para,UserPara)
 
     Initialize the parameters for the optimisation algorithm
+
+    OptiType -> Adjustment of gradient of Hamiltonian
+        - "Gradient" uses the standard gradient of the hamiltonian 
+        - "ProbAdjust" scales the gradient by the inverse of the auxiliary variables
+        - "Newton-Raphson" scales the gradient by the inverse of the Hessian
+    IntegrationOrder -> Which order should the method of integration used should have.
+        - 4 is the default using Simpson's rule
+        - 2 is another option using the trapezoid rule
+    ParallelComputing   -> Indicator whether calculations along vintages should be parallised. 
+                           Needs to be implemented in the future.
+    hLowBound           -> Lower bound for the step of the gridsize along time.
+                           hstep gets halfed until the new value falls below hLowBound.
+    InitLineStep        -> Initial step-size for the adjustment of control variables along the gradient.
+    LineSearchStepIncrease -> Factor for increase in the linesearch stepsize.
+    UpperLineStep       -> Upper bound for linesearch stepsize.
+    stepLowBound        -> Lower bound for step in gradient search -> termination if undercut.
+    GradBound           -> Lower bound for the gradient. 
+                           Algorithm stops if maximum of the absolute value of the gradient is smaller.
+    MaxOptiIter         -> Max iterations with same step-size h.
+    MaxLineIter         -> Max iterations along the same gradient. 
+    GradSmooth          -> Indicator if gradients are smoothed.
+    ConSmooth           -> Indicator if controls are smoothed. 
+    SearchDISP          -> Indicator if intermediate results of the search along the gradient shall be displayed.
+    LineIter            -> Iteration counter
+    OptiIter            -> Iteration counter
+    HstepIter           -> Iteration counter
 """
 function ParametersAlgorithm(Para,UserPara)
     #= ------------------------------------------------------------
@@ -164,9 +203,21 @@ function ParametersAlgorithm(Para,UserPara)
     end
 end
 
+
+"""
+    ParametersInitStates(Para,UserPara)
+
+    Initialize initial and boundary data
+
+    InitStat        -> Initial state values of concentated variables
+    InitStat_dist   -> Initial state values of distributed variables at t=t_0
+                        Will be used in future generalised version of the package
+    BoundStat_dist  -> Initial state values of distributed variables at t
+                        Will be used in future generalised version of the package
+"""
 function ParametersInitStates(Para,UserPara)
     #= ------------------------------------------------------------
-        Iinitial and boundary data
+        Initial and boundary data
     ------------------------------------------------------------ =#
     Para2 = Dict()
     Para2["InitStat"] = zeros(1,1,Para["nStat"])
@@ -186,6 +237,30 @@ end
     ParametersPlots(Para,UserPara)
 
     Initialize parameters relevant for plotting
+
+    nVintagePlot            -> Number of vintages plotted for realtime solutions
+    PlotResultsStart        -> Indicator for plot of initial guess
+    PlotResultsIntermediate -> Indicator for plot of intermediate results
+    PlotResultsFinal        -> Indicator for plot of final results
+    PlotResultsIntermediateFrequency -> Number of algorithm iterations 
+                                        between plot of Intermediate results
+    PlotResultsWaitForKey   -> Indicator whether user input of any key should be necessary 
+                                after plot of intermediate results
+    SavePlot                -> Indicator whether plotted results should be saved
+    SavePlotPath            -> Path for saved plots
+
+    ControlLabelsLatex      -> concentated control labels using latex strings 
+    ControlLabelsSimple     -> concentated control labels without latex strings
+    ControlDistLabelsLatex  -> distributed control labels using latex strings 
+    ControlDistLabelsSimple -> distributed control labels without latex strings 
+    StateLabelsLatex        -> concentated state labels using latex strings 
+    StateLabelsSimple       -> concentated state labels without latex strings 
+    StateDistLabelsLatex    -> distributed state labels using latex strings 
+    StateDistLabelsSimple   -> distributed state labels without latex strings 
+    CoStateLabelsLatex      -> concentated costate labels using latex strings 
+    CoStateLabelsSimple     -> concentated costate labels without latex strings 
+    CoStateDistLabelsLatex  -> distributed costate labels using latex strings 
+    CoStateDistLabelsSimple -> distributed costate labels without latex strings
 """
 function ParametersPlots(Para,UserPara)
     Para2 = Dict()
@@ -227,7 +302,7 @@ end
 """
     InitVariables(Para::Dict)
 
-    Initialize control, state and costate variables for the Parameters specified
+    Initialize control, state and costate variables for the parameters specified
 """
 function InitVariables(Para::Dict)
     Con = zeros(1,Para["nTime"],Para["nCon"])
