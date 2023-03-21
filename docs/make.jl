@@ -20,7 +20,7 @@ makedocs(
                ]
         )
 
-#deploydocs(;
- #       repo = "github.com/michaelfreiberger/TwoStageOptimalControl.jl")
+deploydocs(;
+       repo = "github.com/michaelfreiberger/TwoStageOptimalControl.jl.git")
 
  
