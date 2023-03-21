@@ -1,8 +1,13 @@
 
 """
-    state_PDE_solver(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Stat_agg::Array{Float64,3},Para::Dict)
+    state_PDE_solver(Con::Array{Float64,3},
+                     Stat::Array{Float64,3},
+                     Con_dist::Array{Float64,3},
+                     Stat_dist::Array{Float64,3},
+                     Stat_agg::Array{Float64,3},
+                     Para::Dict)
 
-    state_PDE_solver solves the dynamic system of state equations with given initial conditions and control variables.
+state\\_PDE\\_solver solves the dynamic system of state equations with given initial conditions and control variables.
 """
 function state_PDE_solver(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Stat_agg::Array{Float64,3},Para::Dict)
     for ii=1:Para["nStat"]
@@ -33,7 +38,7 @@ end
 """
     HeunODE(Con::Array{Float64,3},Stat::Array{Float64,3},Para::Dict)
 
-    HeunODEco solves the state dynamics in the first stage forward in time using the Heun-method for ordinary differential equations.
+HeunODEco solves the state dynamics in the first stage forward in time using the Heun-method for ordinary differential equations.
 """
 function HeunODE(Con::Array{Float64,3},Stat::Array{Float64,3},Para::Dict)
 
@@ -55,7 +60,7 @@ end
 """
     RK4ODE(Con::Array{Float64,3},Stat::Array{Float64,3},Para::Dict)
 
-    RK4ODE solves the state dynamics in the first stage forward in time using a 4th-order Runge-Kutta method for ordinary differential equations.
+RK4ODE solves the state dynamics in the first stage forward in time using a 4th-order Runge-Kutta method for ordinary differential equations.
 """
 function RK4ODE(Con::Array{Float64,3},Stat::Array{Float64,3},Para::Dict)
     c2 = 1/3
@@ -96,7 +101,7 @@ end
 """
     HeunPDE(jj,Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Para::Dict)
 
-    HeunODEco solves the state dynamics for vintage jj in the second stage forward in time using the Heun-method for ordinary differential equations.
+HeunODEco solves the state dynamics for vintage jj in the second stage forward in time using the Heun-method for ordinary differential equations.
 """
 function HeunPDE(jj,Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Para::Dict)
 
@@ -116,11 +121,18 @@ function HeunPDE(jj,Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Para:
 end
 
 """
-    costate_PDE_solver(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Stat_agg::Array{Float64,3},
-                            CoStat::Array{Float64,3},CoStat_dist::Array{Float64,3},CoStat_agg::Array{Float64,3},Para::Dict)
+    costate_PDE_solver(Con::Array{Float64,3},
+                       Stat::Array{Float64,3},
+                       Con_dist::Array{Float64,3},
+                       Stat_dist::Array{Float64,3},
+                       Stat_agg::Array{Float64,3},
+                       CoStat::Array{Float64,3},
+                       CoStat_dist::Array{Float64,3},
+                       CoStat_agg::Array{Float64,3},
+                       Para::Dict)
 
-    costate_PDE_solver solves the dynamic system of co-state equations backwards with given endvalues for given controls and state variables.
-    For the special case of endconstraints for the STATE-variables, we use the FOC to derive the respective value of CO-STATE variable.
+costate\\_PDE\\_solver solves the dynamic system of co-state equations backwards with given endvalues for given controls and state variables.
+For the special case of endconstraints for the STATE-variables, we use the FOC to derive the respective value of CO-STATE variable.
 """
 function costate_PDE_solver(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Stat_agg::Array{Float64,3},
                             CoStat::Array{Float64,3},CoStat_dist::Array{Float64,3},CoStat_agg::Array{Float64,3},Para::Dict)
@@ -142,9 +154,13 @@ function costate_PDE_solver(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dis
 end
 
 """
-    HeunODEco(Con::Array{Float64,3},Stat::Array{Float64,3},CoStat::Array{Float64,3},CoStat_dist::Array{Float64,3},Para::Dict)
+    HeunODEco(Con::Array{Float64,3},
+              Stat::Array{Float64,3},
+              CoStat::Array{Float64,3},
+              CoStat_dist::Array{Float64,3},
+              Para::Dict)
 
-    HeunODEco solves the costate dynamics in the first stage backwards in time using the Heun-method for ordinary differential equations.
+HeunODEco solves the costate dynamics in the first stage backwards in time using the Heun-method for ordinary differential equations.
 """
 function HeunODEco(Con::Array{Float64,3},Stat::Array{Float64,3},CoStat::Array{Float64,3},CoStat_dist::Array{Float64,3},Para::Dict)
     Dt = zeros(Para["nStat"])
@@ -164,9 +180,13 @@ function HeunODEco(Con::Array{Float64,3},Stat::Array{Float64,3},CoStat::Array{Fl
 end
 
 """
-    HeunPDEco(jj,Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},CoStat_dist::Array{Float64,3},Para::Dict)
+    HeunPDEco(jj,
+              Con_dist::Array{Float64,3},
+              Stat_dist::Array{Float64,3},
+              CoStat_dist::Array{Float64,3},
+              Para::Dict)
 
-    HeunPDEco solves the costate dynamic for vintage jj in the second stage backwards in time using the Heun-method for ordinary differential equations.
+HeunPDEco solves the costate dynamic for vintage jj in the second stage backwards in time using the Heun-method for ordinary differential equations.
 """
 function HeunPDEco(jj,Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},CoStat_dist::Array{Float64,3},Para::Dict)
     

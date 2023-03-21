@@ -21,8 +21,7 @@
                Stat_dist_best::Array{Float64,3}, 
                Stat_agg_best::Array{Float64,3})
 
-    Searches for an improvement along the gradient using 
-    a quadratic approximation for the objective function along the gradient.
+Searches for an improvement along the gradient using a quadratic approximation for the objective function along the gradient.
 """
 function LineSearch(Con::Array{Float64,3}, 
                     Stat::Array{Float64,3}, 
@@ -184,8 +183,7 @@ end
            Stat_dist_new::Array{Float64,3}, 
            Stat_agg_new::Array{Float64,3})
 
-    Update calculates the new values for Controls `Con_new`, States `Stat_new` and Objectiv value 
-    given start values for the Controls `Con`, the search direction `Dir_u` and the step-size in the direction `step`
+Update calculates the new values for Controls `Con_new`, States `Stat_new` and Objectiv value given start values for the Controls `Con`, the search direction `Dir_u` and the step-size in the direction `step`
 """
 function Update(Con::Array{Float64,3},Con_dist::Array{Float64,3},Dir_u::Array{Float64,3},Dir_u_dist::Array{Float64,3},Step,Para::Dict,
                 Con_new::Array{Float64,3},Stat_new::Array{Float64,3},Con_dist_new::Array{Float64,3},Stat_dist_new::Array{Float64,3}, Stat_agg_new::Array{Float64,3})
@@ -221,7 +219,7 @@ end
                Stat_dist_best::Array{Float64,3},  
                Stat_agg_best::Array{Float64,3})
 
-    Assign the current variables to the "best" variables
+Assign the current variables to the "best" variables
 """
 function AssignBest(ObjValue::Float64,Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3}, Stat_agg::Array{Float64,3}, 
                     step, 
@@ -244,9 +242,7 @@ end
                    dHam_dist::Array{Float64,3},
                    Para::Dict)
 
-    Calculate the maximum of the absolute value of the gradient
-    of the Hamiltonian accounting for controls which are on the
-    boundary of their feasible regions.
+Calculate the maximum of the absolute value of the gradient of the Hamiltonian accounting for controls which are on the boundary of their feasible regions.
 """
 function maxabsGradient(Con::Array{Float64,3},Con_dist::Array{Float64,3},dHam::Array{Float64,3},dHam_dist::Array{Float64,3},Para::Dict)
     dHam_abs = zeros(1,Para["nTime"],Para["nCon"])

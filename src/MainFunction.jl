@@ -10,14 +10,15 @@
             SalvageFunction1 = (S1, Para::Dict) -> 0, 
             SalvageFunction2 = (S2, Para::Dict) -> 0)
 
-    This function solves the two-stage optimal control problem defined by the functions
-        - ObjectiveIntegrand1 -> integrand of the objective function
-        - AggregationIntegrand -> integrand of the second stage aggregation function quantile
-        - StateDynamic1 -> State dynamics in the first stage
-        - StateDynamic2 -> State dynamics in the second stage
-        - Shock12 -> function describing the transition of state variables from the first to second stage
-        - SalvageFunction1 -> Salvage function in the first stage
-        - SalvageFunction2 -> Salvage function in the second stage
+This function solves the two-stage optimal control problem defined by the functions
+
+- ObjectiveIntegrand1 -> integrand of the objective function
+- AggregationIntegrand -> integrand of the second stage aggregation function quantile
+- StateDynamic1 -> State dynamics in the first stage
+- StateDynamic2 -> State dynamics in the second stage
+- Shock12 -> function describing the transition of state variables from the first to second stage
+- SalvageFunction1 -> Salvage function in the first stage
+- SalvageFunction2 -> Salvage function in the second stage
 """
 function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
                     ObjectiveIntegrand1 = (C1, S1, t::Float64, Para::Dict) -> 0,

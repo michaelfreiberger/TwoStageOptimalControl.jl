@@ -1,8 +1,18 @@
 
 """
-    AssignResults(Results::Dict, Con::Array{Float64,3}, Stat::Array{Float64,3}, Con_dist::Array{Float64,3}, Stat_dist::Array{Float64,3}, Stat_agg::Array{Float64,3}, CoStat::Array{Float64,3}, CoStat_dist::Array{Float64,3}, dHam::Array{Float64,3}, dHam_dist::Array{Float64,3}, Para::Dict)
+    AssignResults(Results::Dict, 
+                  Con::Array{Float64,3}, 
+                  Stat::Array{Float64,3}, 
+                  Con_dist::Array{Float64,3}, 
+                  Stat_dist::Array{Float64,3}, 
+                  Stat_agg::Array{Float64,3}, 
+                  CoStat::Array{Float64,3}, 
+                  CoStat_dist::Array{Float64,3}, 
+                  dHam::Array{Float64,3}, 
+                  dHam_dist::Array{Float64,3}, 
+                  Para::Dict)
 
-    Assign the control and state variables to the Results dictionary
+Assign the control and state variables to the Results dictionary
 """
 function AssignResults(Results::Dict, Con::Array{Float64,3}, Stat::Array{Float64,3}, Con_dist::Array{Float64,3}, Stat_dist::Array{Float64,3}, Stat_agg::Array{Float64,3}, CoStat::Array{Float64,3}, CoStat_dist::Array{Float64,3}, dHam::Array{Float64,3}, dHam_dist::Array{Float64,3}, Para::Dict)
 
@@ -22,12 +32,15 @@ function AssignResults(Results::Dict, Con::Array{Float64,3}, Stat::Array{Float64
 end
 
 """
-    PlotResults(Results2::Dict;SavePlot=false,Display=true,sizeX=600,sizeY=400)
+    PlotResults(Results2::Dict;
+                SavePlot=false,
+                Display=true,
+                sizeX=600,sizeY=400)
 
-    Basic plots of all controls + gradient and state + costate variables
-    SavePlot -> Indicator whether plots should be saved to location specifice in Para["SavePlotPath"]
-    Display  -> Should the plots be displayed or supressed.
-    sizeX, sizeY -> dimensions of the plots. Default = 600x400
+Basic plots of all controls + gradient and state + costate variables
+- SavePlot -> Indicator whether plots should be saved to location specifice in Para["SavePlotPath"]
+- Display  -> Should the plots be displayed or supressed.
+- sizeX, sizeY -> dimensions of the plots. Default = 600x400
 """
 function PlotResults(Results2::Dict;SavePlot=false,Display=true,sizeX=600,sizeY=400)
 
@@ -188,7 +201,7 @@ end
 """
     SaveResults(Results::Dict,filepath)
 
-    Save the Results Dictionary to filepath
+Save the Results Dictionary to filepath
 """
 function SaveResults(Results::Dict,filepath)
     Results["Para"]["SavePlotPath"] = filepath
@@ -198,7 +211,7 @@ end
 """
     LoadResults(filepath)
 
-    Load the Results Dictionary from the filepath
+Load the Results Dictionary from the filepath
 """
 function LoadResults(filepath)
     Results = load(string(filepath,".jld2"))

@@ -8,8 +8,7 @@
                  Stat_agg::Array{Float64,3}, 
                  Para::Dict )
 
-    Calculate the aggregated objective value of the optimal control problem 
-    for the current solutions of control and state variables
+Calculate the aggregated objective value of the optimal control problem for the current solutions of control and state variables
 """
 function ObjectValue( Con::Array{Float64,3}, Stat::Array{Float64,3}, Con_dist::Array{Float64,3}, Stat_dist::Array{Float64,3},  Stat_agg::Array{Float64,3}, Para::Dict )
     F = zeros(Para["nTime"])
@@ -26,7 +25,7 @@ end
               Stat_agg::Array{Float64,3},
               Para::Dict )
 
-    Calculate the aggregated variables over all vintage in the second stage
+Calculate the aggregated variables over all vintage in the second stage
 """
 function Aggregate(Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Stat_agg::Array{Float64,3},Para::Dict )
     for ii = 1:Para["nTime"]
@@ -44,8 +43,7 @@ end
                     Stat_dist::Array{Float64,3},
                     Para::Dict )
 
-    Calculate the starting values for all vintages 
-    given the state profiles of the first stage.
+Calculate the starting values for all vintages given the state profiles of the first stage.
 """
 function ShockTransition(Con::Array{Float64,3},Stat::Array{Float64,3},Stat_dist::Array{Float64,3},Para::Dict )
     for ii = 1:Para["nTime"]
@@ -60,21 +58,16 @@ end
            Dt::Array{Float64,1}, 
            Para::Dict )
 
-    Right hand side of the ODE for the state variables 
-    in the first stage at time index tt.
+Right hand side of the ODE for the state variables in the first stage at time index tt.
 """
 function f_ODE( tt::Int64, Con::Array{Float64,3}, Stat::Array{Float64,3}, Dt::Array{Float64,1}, Para::Dict )
     Dt .= StateDynamic_1(Con[1,tt,:],Stat[1,tt,:],Para["tmesh"][tt],Para)
 end
 
 """
-    f_ODE_interstep( t::Float64, 
-                     Con, 
-                     Stat, 
-                     Para::Dict)
+    f_ODE_interstep( t::Float64, Con, Stat, Para::Dict)
 
-    Right hand side of the ODE for the state variables in the first stage. 
-    Only used for the 4th order RK-method where the Control variables have to be interpolated.
+Right hand side of the ODE for the state variables in the first stage. Only used for the 4th order RK-method where the Control variables have to be interpolated.
 """
 function f_ODE_interstep( t::Float64, Con, Stat, Para::Dict)
     k = StateDynamic_1(Con,Stat,t,Para)
@@ -82,15 +75,13 @@ function f_ODE_interstep( t::Float64, Con, Stat, Para::Dict)
 end
 
 """
-    f_PDE( tt::Int64,
-           ss::Int64, 
+    f_PDE( tt::Int64, ss::Int64, 
            Con_dist::Array{Float64,3}, 
            Stat_dist::Array{Float64,3}, 
            Dt::Array{Float64,1},
            Para::Dict )
 
-    Right hand side of the PDE for the state variables 
-    in the second stage at time index tt and vintage ss.
+Right hand side of the PDE for the state variables in the second stage at time index tt and vintage ss.
 """
 function f_PDE( tt::Int64,ss::Int64, Con_dist::Array{Float64,3}, Stat_dist::Array{Float64,3}, Dt::Array{Float64,1},Para::Dict )
     Dt .= StateDynamic_2(Con_dist[ss,tt,:],Stat_dist[ss,tt,:],Para["tmesh"][tt],Para["tmesh"][ss],Para)
@@ -105,39 +96,31 @@ end
               Dt::Array{Float64,1},
               Para::Dict )
 
-    Right hand side of the PDE for the costate variables
-    in the first stage at time index tt.
+Right hand side of the PDE for the costate variables in the first stage at time index tt.
 """
 function f_ODE_co( tt::Int64,Con::Array{Float64,3},Stat::Array{Float64,3},CoStat::Array{Float64,3},CoStat_dist::Array{Float64,3},Dt::Array{Float64,1},Para::Dict )
     Dt .=  Para["rho"]*CoStat[1,tt,:] - ForwardDiff.gradient(X->Hamiltonian(Con[1,tt,:],X,CoStat[1,tt,:],CoStat_dist[tt,tt,:],Para["tmesh"][tt],Para),Stat[1,tt,:])
 end
 
 """
-    f_PDE_co( tt::Int64,
-              ss::Int64,
+    f_PDE_co( tt::Int64, ss::Int64,
               Con_dist::Array{Float64,3},
               Stat_dist::Array{Float64,3},
               CoStat_dist::Array{Float64,3},
               Dt::Array{Float64,1},
               Para::Dict )
 
-    Right hand side of the PDE for the costate variables 
-    in the second stage at time index tt and vintage ss.
+Right hand side of the PDE for the costate variables in the second stage at time index tt and vintage ss.
 """
 function f_PDE_co( tt::Int64,ss::Int64,Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},CoStat_dist::Array{Float64,3},Dt::Array{Float64,1},Para::Dict )
     Dt .= Para["rho"]*CoStat_dist[ss,tt,:] - ForwardDiff.gradient(X->Hamiltonian_dist(Con_dist[ss,tt,:],X,CoStat_dist[ss,tt,:],Para["tmesh"][tt],Para["tmesh"][ss],Para),Stat_dist[ss,tt,:])
 end
 
 """
-    Hamiltonian(Con, 
-                Stat, 
-                CoStat, 
-                CoStat_dist, 
-                t::Float64, 
-                Para::Dict )
+    Hamiltonian(Con, Stat, CoStat, CoStat_dist, 
+                t::Float64, Para::Dict )
 
-    Definition of the Hamiltonian with all terms relevant 
-    for the calculations including first stage variables.
+Definition of the Hamiltonian with all terms relevant for the calculations including first stage variables.
 """
 function Hamiltonian(Con, Stat, CoStat, CoStat_dist, t::Float64, Para::Dict )
     return ObjectiveIntegrand(Con,Stat,t,Para) + 
@@ -153,8 +136,7 @@ end
                      s::Float64, 
                      Para::Dict )
 
-    Definition of the Hamiltonian with all terms relevant 
-    for the calculations including second stage variables.
+Definition of the Hamiltonian with all terms relevant for the calculations including second stage variables.
 """
 function Hamiltonian_dist(Con_dist, Stat_dist, CoStat_dist, t::Float64, s::Float64, Para::Dict )
     return dot(CoStat_dist,StateDynamic_2(Con_dist,Stat_dist,t,s,Para)) +
@@ -173,7 +155,7 @@ end
                     dHam_dist::Array{Float64,3},
                     Para::Dict)
 
-    Calculation of the gradient of the Hamiltonian for both stages.
+Calculation of the gradient of the Hamiltonian for both stages.
 """
 function GradHamiltonian(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Stat_agg::Array{Float64,3},
     CoStat::Array{Float64,3},CoStat_dist::Array{Float64,3},dHam::Array{Float64,3},dHam_dist::Array{Float64,3},Para::Dict)
@@ -214,16 +196,10 @@ end
                  dHam_dist::Array{Float64,3},
                  Para::Dict)
 
-    Adjustment of the gradient of the Hamiltonian depending 
-    on the optimisation type chosen. Available types are:
-        - "Gradient"
-            Uses the gradient without adjustments
-        - "ProbAdjust"
-            Adjusts the gradient for the weighting of the vintage 
-            in the second stage and the survival probability in the first stage
-        - "Newton-Raphson"
-            Adjusts the gradient as described in the 
-            Newton-Raphson method using the Hessian of the Hamiltonian
+Adjustment of the gradient of the Hamiltonian depending on the optimisation type chosen. Available types are:
+- "Gradient" -> Uses the gradient without adjustments
+- "ProbAdjust" -> Adjusts the gradient for the weighting of the vintage in the second stage and the survival probability in the first stage
+- "Newton-Raphson" -> Adjusts the gradient as described in the Newton-Raphson method using the Hessian of the Hamiltonian
 """
 function NewDirection(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Array{Float64,3},Stat_dist::Array{Float64,3},Stat_agg::Array{Float64,3},CoStat::Array{Float64,3},CoStat_dist::Array{Float64,3},dHam::Array{Float64,3},dHam_dist::Array{Float64,3},Para::Dict)
     eps = 1e-6
@@ -273,11 +249,9 @@ function NewDirection(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Arr
 end
 
 """
-    ConMapping( Con::Array{Float64,3}, 
-                Para )
+    ConMapping( Con::Array{Float64,3}, Para )
 
-    Map control variables in the first stage into the feasible region 
-    described by the lower and upper bounds of the controls.
+Map control variables in the first stage into the feasible region described by the lower and upper bounds of the controls.
 """
 function ConMapping( Con::Array{Float64,3}, Para )
     for kk = 1:Para["nCon"]
@@ -289,12 +263,9 @@ function ConMapping( Con::Array{Float64,3}, Para )
 end
 
 """
-    ConMapping_dist( Con_dist::Array{Float64,3}, 
-                     ii, 
-                     Para )
+    ConMapping_dist( Con_dist::Array{Float64,3}, ii, Para )
 
-    Map control variables in the second stage into the feasible region 
-    described by the lower and upper bounds of the controls.
+Map control variables in the second stage into the feasible region described by the lower and upper bounds of the controls.
 """
 function ConMapping_dist( Con_dist::Array{Float64,3}, ii, Para )
     for kk = 1:Para["nCon_dist"]
@@ -306,24 +277,18 @@ function ConMapping_dist( Con_dist::Array{Float64,3}, ii, Para )
 end
 
 """
-    EndConstraintCoStat(Stat::Array{Float64,3},
-                        CoStat::Array{Float64,3},
-                        Para::Dict)
+    EndConstraintCoStat(Stat::Array{Float64,3}, CoStat::Array{Float64,3}, Para::Dict)
 
-    Define the endconstraint for the first stage costate variables 
-    using the derivative of the salvage-function.
+Define the endconstraint for the first stage costate variables using the derivative of the salvage-function.
 """
 function EndConstraintCoStat(Stat::Array{Float64,3},CoStat::Array{Float64,3},Para::Dict)
     CoStat[1,Para["nTime"],:] = ForwardDiff.gradient(X->SalvageFunction_1(X,Para),Stat[1,Para["nTime"],:])
 end
 
 """
-    EndConstraintCoStat_dist(Stat_dist::Array{Float64,3},
-                             CoStat_dist::Array{Float64,3},
-                             Para::Dict)
+    EndConstraintCoStat_dist(Stat_dist::Array{Float64,3}, CoStat_dist::Array{Float64,3}, Para::Dict)
 
-    Define the endconstraint for the second stage costate variables 
-    using the derivative of the salvage-function.
+Define the endconstraint for the second stage costate variables using the derivative of the salvage-function.
 """
 function EndConstraintCoStat_dist(Stat_dist::Array{Float64,3},CoStat_dist::Array{Float64,3},Para::Dict)
     for ii = 1:Para["nAge"]
