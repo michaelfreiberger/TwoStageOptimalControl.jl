@@ -13,12 +13,13 @@ makedocs(
         "LineSearch" => "Functions/LineSearch.md",
         "Model Functions" => "Functions/ModelFunctions.md",
         "State Solvers" => "Functions/StateSolvers.md",
-        "Example 1" => "Examples/Test1.md"
+        "Example 1" => "Examples/Test1.md",
 #        "Example 2" => "Examples/Test2.md",
                ]
         )
 
 deploydocs(;
-       repo = "github.com/michaelfreiberger/TwoStageOptimalControl.jl.git")
+       repo = "github.com/michaelfreiberger/TwoStageOptimalControl.jl.git",
+)
 
  

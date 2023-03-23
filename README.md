@@ -16,7 +16,7 @@ julia> Pkg.add(url="https://github.com/michaelfreiberger/TwoStageOptimalControl.
 
 # Documentation
 
-For information on how to use the toolbox and some examples, please take a look into the [documentation](docs/src/index.md). 
+For information on how to use the toolbox and some examples, please take a look into the [documentation](https://michaelfreiberger.github.io/TwoStageOptimalControl.jl/dev/). 
 
 # Problem class
 
