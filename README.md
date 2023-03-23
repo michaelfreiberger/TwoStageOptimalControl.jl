@@ -55,17 +55,17 @@ $$
 
 The model consist of three different types of variables:
 
-* concentated state and control variables (depending on time $t$)
+* concentrated state and control variables (depending on time $t$)
 * distributed state and control variables (depending on time $t$ and vintage $s$)
 * aggregated state variables (depending on time $t$)
 
-### Concentated variables
+### Concentrated variables
 
-The concentated variables consist of the $n_1$-dimensional control variable $C_1$ and the $m_1$-dimensional state variable $S_1$. The initial value of $S_1$ is given by $S_1^0$ and its dynamics are affected by $C_1$. Furthermore $C_1$ also affects the initial values of the distributed variables (see below).
+The concentrated variables consist of the $n_1$-dimensional control variable $C_1$ and the $m_1$-dimensional state variable $S_1$. The initial value of $S_1$ is given by $S_1^0$ and its dynamics are affected by $C_1$. Furthermore $C_1$ also affects the initial values of the distributed variables (see below).
 
 ### Distributed variables
 
-Analogous to the concentated variables, the distributed variables consist of the $n_2$-dimensional control variable $C_2$ and the $m_2$-dimensional state variable $S_2$. The strictly speaking partial differential equation can be solved along the characteristic lines with fixed vintage $s=\overline{s}$. While the dynamics of $S_2$ are again affected by the distributed controls $C_2$, the initial values of $S_2$ at the beginning of each vintage $s$ are determined by the value of the concentated state $S_1$ at time $s$ and the concentated control $C_1$.
+Analogous to the concentrated variables, the distributed variables consist of the $n_2$-dimensional control variable $C_2$ and the $m_2$-dimensional state variable $S_2$. The strictly speaking partial differential equation can be solved along the characteristic lines with fixed vintage $s=\overline{s}$. While the dynamics of $S_2$ are again affected by the distributed controls $C_2$, the initial values of $S_2$ at the beginning of each vintage $s$ are determined by the value of the concentrated state $S_1$ at time $s$ and the concentrated control $C_1$.
 
 ### Aggregated variables
 
