@@ -1,6 +1,5 @@
 # TwoStageOptimalControl.jl
 [![Build Status](https://github.com/michaelfreiberger/TwoStageOptimalControl.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/michaelfreiberger/TwoStageOptimalControl.jl/actions/workflows/ci.yml?query=branch%3Amaster)
-
 [![DOI](https://zenodo.org/badge/590158468.svg)](https://zenodo.org/badge/latestdoi/590158468)
 
 
