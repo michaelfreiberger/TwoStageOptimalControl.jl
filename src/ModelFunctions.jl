@@ -219,12 +219,16 @@ function NewDirection(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Arr
         Hessian(ii,jj) = ForwardDiff.hessian(X->Hamiltonian_dist(X,Stat_dist[jj,ii,:],CoStat_dist[jj,ii,:],Para["tmesh"][ii],Para["tmesh"][jj],Para),Con_dist[jj,ii,:])
         for jj = 1:Para["nTime"]
             for ii = jj:Para["nTime"]
-                dHam_dist[jj,ii,:] .= - inv(Hessian(ii,jj))*dHam_dist[jj,ii,:] 
+                if abs(det(Hessian(ii,jj))) > 1e-9
+                    dHam_dist[jj,ii,:] .= - inv(Hessian(ii,jj))*dHam_dist[jj,ii,:] 
+                end                    
             end
         end
         Hessian(ii) = ForwardDiff.hessian(X->Hamiltonian(X,Stat[1,ii,:],CoStat[1,ii,:],CoStat_dist[ii,ii,:],Para["tmesh"][ii],Para),Con[1,ii,:])
         for ii = 1:Para["nTime"]
-            dHam[1,ii,:] .= -inv(Hessian(ii))*dHam[1,ii,:]
+            if abs(det(Hessian(ii))) > 1e-9
+                dHam[1,ii,:] .= -inv(Hessian(ii))*dHam[1,ii,:]
+            end
         end
     else
         Para["OptiType"] = "Gradient"
