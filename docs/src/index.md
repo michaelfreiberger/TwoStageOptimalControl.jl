@@ -1,6 +1,6 @@
 # TwoStageOptimalControl
 
-For general information on the package, the model class it is able to solve, and how to install it, please revisit the [ReadMe page]().
+For general information on the package, the model class it is able to solve, and how to install it, please revisit the [ReadMe page](https://github.com/michaelfreiberger/TwoStageOptimalControl.jl/blob/master/README.md).
 
 
 ## Function Documentation
