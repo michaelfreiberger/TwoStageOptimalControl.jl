@@ -107,7 +107,6 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
         return
     end
    
-
     #-----------------------------------------------------------------------------------------------
     # Define the order of the integration method for the objective value and 
     # the aggregated variables
@@ -175,10 +174,7 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
             # Plot all profiles
             PlotResults(Results)
             # Wait for user key if specified
-            if Para["PlotResultsWaitForKey"]
-                display("Wait for key")
-                readline()
-            end
+            WaitForEnter(Para)
         end
 
 
@@ -204,11 +200,8 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
                 GradHamiltonian(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
                 NewDirection(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
                 AssignResults(Results, Con, Stat, Con_dist, Stat_dist, Stat_agg, CoStat, CoStat_dist, dHam, dHam_dist, Para)
-                PlotResults(Results)
-                if Para["PlotResultsWaitForKey"]
-                    display("Wait for key")
-                    readline()
-                end
+                PlotResultsIntermediate(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
+                WaitForEnter(Para)
             end
             
             # Smooth the profiles of the control variables if specified by the user
@@ -227,7 +220,8 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
 
         AssignResults(Results, Con, Stat, Con_dist, Stat_dist, Stat_agg, CoStat, CoStat_dist, dHam, dHam_dist, Para)
         if Para["PlotResultsIntermediate"]
-            PlotResults(Results)
+            PlotResultsIntermediate(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
+            WaitForEnter(Para)
         end
 
         # Decrease/Half the time-step size and reset the iteration counters
@@ -240,7 +234,7 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
             StopOuterIteration = 0
             # if the smallest step-size is reached, use the original gradient for the linesearch without adjustment
             if Para["hstep"]/2 <= Para["hLowBound"] 
-                Para["OptiType"] = "Gradient"
+                #Para["OptiType"] = "Gradient"
             end
         else
             StopOuterIteration = 1

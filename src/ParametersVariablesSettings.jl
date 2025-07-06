@@ -87,8 +87,8 @@ end
 Initialize the parameters associated with the control variables
 
 - LoadInits   -> Loading specific initial guesses for the control variables
-- Reduce1     -> Indices of controls, which should be disabled (Stage 1)
-- Reduce2     -> Indices of controls, which should be disabled (Stage 2)
+- FixedControl1     -> Indices of controls, which should be disabled (Stage 1)
+- FixedControl2     -> Indices of controls, which should be disabled (Stage 2)
 - ConMin      -> Lower bound for the concentated control variables
 - ConMax      -> Upper bound for the concentated control variables
 - Con_distMin -> Lower bound for the distributed control variables
@@ -99,14 +99,14 @@ function ParametersControls(Para,UserPara)
     # Loading specific initial guesses for the control variables
     Para2["LoadInits"] = false                   
     # Indices of controls, which should be disabled (Stage 1)
-    Para2["Reduce1"] = []                       
+    Para2["FixedControl1"] = []                       
     # Indices of controls, which should be disabled (Stage 2)
-    Para2["Reduce2"] = []       
+    Para2["FixedControl2"] = []       
     # Lower and Upper bounds for the control variables
-    Para2["ConMin"] = -Inf*ones(Para["nCon"])
-    Para2["ConMax"] =  Inf*ones(Para["nCon"])
-    Para2["Con_distMin"] = -Inf*ones(Para["nCon_dist"])
-    Para2["Con_distMax"] = Inf*ones(Para["nCon_dist"])
+    Para2["ConMin"] = (t) -> -Inf*ones(Para["nCon"])
+    Para2["ConMax"] = (t) -> Inf*ones(Para["nCon"])
+    Para2["Con_distMin"] = (t) -> -Inf*ones(Para["nCon_dist"])
+    Para2["Con_distMax"] = (t) -> Inf*ones(Para["nCon_dist"])
 
     # Overwrite values if given by the User
     for kk in keys(Para2)
@@ -313,13 +313,6 @@ function InitVariables(Para::Dict)
     CoStat = zeros(1,Para["nTime"],Para["nStat"])
     CoStat_dist = zeros(Para["nAge"],Para["nTime"],Para["nStat_dist"])
     CoStat_agg = zeros(1,Para["nTime"],1)
-
-    for kk in Para["Reduce1"]
-        Con[:,:,kk] .= 0
-    end
-    for kk in Para["Reduce2"]
-        Con_dist[:,:,kk] .= 0
-    end
 
     return Con, Stat, Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,CoStat_agg
 end

@@ -16,7 +16,16 @@ function ObjectValue( Con::Array{Float64,3}, Stat::Array{Float64,3}, Con_dist::A
         F[jj] = exp(-Para["rho"]*Para["tmesh"][jj]) * 
                 (ObjectiveIntegrand(Con[1,jj,:],Stat[1,jj,:],Para["tmesh"][jj],Para) + Stat_agg[1,jj,1])
     end
-    return Integral(Para["nTime"],Para["hstep"],F)
+
+    FSalvage2 = zeros(Para["nTime"])
+    for jj = 1:Para["nTime"]
+        FSalvage2[jj] = SalvageFunction_2(Stat_dist[jj,Para["nTime"],:],Para)
+    end
+    FSalvage2Aggregate = Integral(Para["nTime"],Para["hstep"],FSalvage2)
+
+    return Integral(Para["nTime"],Para["hstep"],F) + 
+            exp(-Para["rho"]*Para["T"]) * SalvageFunction_1(Stat[1,Para["nTime"],:],Para) + 
+            exp(-Para["rho"]*Para["T"]) * FSalvage2Aggregate
 end
 
 """
@@ -123,9 +132,14 @@ end
 Definition of the Hamiltonian with all terms relevant for the calculations including first stage variables.
 """
 function Hamiltonian(Con, Stat, CoStat, CoStat_dist, t::Float64, Para::Dict )
-    return ObjectiveIntegrand(Con,Stat,t,Para) + 
-            + dot(CoStat,StateDynamic_1(Con,Stat,t,Para)) + 
-            + dot(CoStat_dist,Shock(Con,Stat,t,Para))
+    if Para["nStat_dist"] > 0
+        return ObjectiveIntegrand(Con,Stat,t,Para) + 
+                + dot(CoStat,StateDynamic_1(Con,Stat,t,Para)) + 
+                + dot(CoStat_dist,Shock(Con,Stat,t,Para))
+    else
+        return ObjectiveIntegrand(Con,Stat,t,Para) + 
+                + dot(CoStat,StateDynamic_1(Con,Stat,t,Para))
+    end
 end
 
 """
@@ -139,8 +153,12 @@ end
 Definition of the Hamiltonian with all terms relevant for the calculations including second stage variables.
 """
 function Hamiltonian_dist(Con_dist, Stat_dist, CoStat_dist, t::Float64, s::Float64, Para::Dict )
-    return dot(CoStat_dist,StateDynamic_2(Con_dist,Stat_dist,t,s,Para)) +
+    if Para["nStat_dist"] > 0
+        return dot(CoStat_dist,StateDynamic_2(Con_dist,Stat_dist,t,s,Para)) +
             + AggregationFunction(Con_dist,Stat_dist, t,s, Para)
+    else
+        return 0
+    end
 end
 
 """
@@ -168,8 +186,10 @@ function GradHamiltonian(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::
             # Calculate Gradient for first stage
             dHam[1,jj,:] = ForwardDiff.gradient(X->Hamiltonian(X,Stat[1,jj,:],CoStat[1,jj,:],CoStat_dist[jj,jj,:],Para["tmesh"][jj],Para),Con[1,jj,:])
             # Calculate Gradient for vintage jj
-            for ii = jj:Para["nTime"]
-                dHam_dist[jj,ii,:] = ForwardDiff.gradient(X->Hamiltonian_dist(X,Stat_dist[jj,ii,:],CoStat_dist[jj,ii,:],Para["tmesh"][ii],Para["tmesh"][jj],Para),Con_dist[jj,ii,:])
+            if Para["nStat_dist"] > 0
+                for ii = jj:Para["nTime"]
+                    dHam_dist[jj,ii,:] = ForwardDiff.gradient(X->Hamiltonian_dist(X,Stat_dist[jj,ii,:],CoStat_dist[jj,ii,:],Para["tmesh"][ii],Para["tmesh"][jj],Para),Con_dist[jj,ii,:])
+                end
             end
         end
     else
@@ -177,8 +197,10 @@ function GradHamiltonian(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::
             # Calculate Gradient for first stage
             dHam[1,jj,:] = ForwardDiff.gradient(X->Hamiltonian(X,Stat[1,jj,:],CoStat[1,jj,:],CoStat_dist[jj,jj,:],Para["tmesh"][jj],Para),Con[1,jj,:])
             # Calculate Gradient for vintage jj
-            for ii = jj:Para["nTime"]
-                dHam_dist[jj,ii,:] = ForwardDiff.gradient(X->Hamiltonian_dist(X,Stat_dist[jj,ii,:],CoStat_dist[jj,ii,:],Para["tmesh"][ii],Para["tmesh"][jj],Para),Con_dist[jj,ii,:])
+            if Para["nStat_dist"] > 0
+                for ii = jj:Para["nTime"]
+                    dHam_dist[jj,ii,:] = ForwardDiff.gradient(X->Hamiltonian_dist(X,Stat_dist[jj,ii,:],CoStat_dist[jj,ii,:],Para["tmesh"][ii],Para["tmesh"][jj],Para),Con_dist[jj,ii,:])
+                end
             end
         end
     end
@@ -207,27 +229,31 @@ function NewDirection(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Arr
         dHam .= dHam
         dHam_dist .= dHam_dist
     elseif Para["OptiType"] == "ProbAdjust"
-        for jj = 1:Para["nTime"]
-            for ii = jj:Para["nTime"]
-                dHam_dist[jj,ii,:] .= dHam_dist[jj,ii,:] ./ max(eps,Stat_dist[jj,ii,Para["ProbIndex"]])
+        if Para["nStat_dist"] > 0
+            for jj = 1:Para["nTime"]
+                for ii = jj:Para["nTime"]
+                    dHam_dist[jj,ii,:] .= dHam_dist[jj,ii,:] ./ max(eps,Stat_dist[jj,ii,Para["ProbIndex"]])
+                end
             end
         end
         for ii = 1:Para["nTime"]
             dHam[1,ii,:] .= dHam[1,ii,:] ./ max(eps,Stat[1,ii,Para["ProbIndex"]])
         end
     elseif Para["OptiType"] == "Newton-Raphson"
-        Hessian(ii,jj) = ForwardDiff.hessian(X->Hamiltonian_dist(X,Stat_dist[jj,ii,:],CoStat_dist[jj,ii,:],Para["tmesh"][ii],Para["tmesh"][jj],Para),Con_dist[jj,ii,:])
-        for jj = 1:Para["nTime"]
-            for ii = jj:Para["nTime"]
-                if abs(det(Hessian(ii,jj))) > 1e-9
-                    dHam_dist[jj,ii,:] .= - inv(Hessian(ii,jj))*dHam_dist[jj,ii,:] 
-                end                    
-            end
-        end
         Hessian(ii) = ForwardDiff.hessian(X->Hamiltonian(X,Stat[1,ii,:],CoStat[1,ii,:],CoStat_dist[ii,ii,:],Para["tmesh"][ii],Para),Con[1,ii,:])
         for ii = 1:Para["nTime"]
             if abs(det(Hessian(ii))) > 1e-9
                 dHam[1,ii,:] .= -inv(Hessian(ii))*dHam[1,ii,:]
+            end
+        end
+        if Para["nStat_dist"] > 0
+            Hessian(ii,jj) = ForwardDiff.hessian(X->Hamiltonian_dist(X,Stat_dist[jj,ii,:],CoStat_dist[jj,ii,:],Para["tmesh"][ii],Para["tmesh"][jj],Para),Con_dist[jj,ii,:])
+            for jj = 1:Para["nTime"]
+                for ii = jj:Para["nTime"]
+                    if abs(det(Hessian(ii,jj))) > 1e-9
+                        dHam_dist[jj,ii,:] .= - inv(Hessian(ii,jj))*dHam_dist[jj,ii,:] 
+                    end                    
+                end
             end
         end
     else
@@ -244,10 +270,10 @@ function NewDirection(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist::Arr
     #=-------------------------------------------------
         Reducing the model
     -------------------------------------------------=#
-    for kk in Para["Reduce1"]
+    for kk in Para["FixedControl1"]
         dHam[:,:,kk] .= 0
     end
-    for kk in Para["Reduce2"]
+    for kk in Para["FixedControl2"]
         dHam_dist[:,:,kk] .= 0
     end
 end
@@ -259,9 +285,11 @@ Map control variables in the first stage into the feasible region described by t
 """
 function ConMapping( Con::Array{Float64,3}, Para )
     for kk = 1:Para["nCon"]
-        if !(kk in Para["Reduce1"])
-            Con[1,:,kk] .= max.(Con[1,:,kk],Para["ConMin"][kk])
-            Con[1,:,kk] .= min.(Con[1,:,kk],Para["ConMax"][kk])
+        if !(kk in Para["FixedControl1"])
+            for ii = 1:Para["nTime"]
+                Con[1,ii,kk] = max.(Con[1,ii,kk],Para["ConMin"](Para["tmesh"][ii])[kk])
+                Con[1,ii,kk] = min.(Con[1,ii,kk],Para["ConMax"](Para["tmesh"][ii])[kk])
+            end
         end
     end
 end
@@ -273,9 +301,11 @@ Map control variables in the second stage into the feasible region described by 
 """
 function ConMapping_dist( Con_dist::Array{Float64,3}, ii, Para )
     for kk = 1:Para["nCon_dist"]
-        if !(kk in Para["Reduce2"])
-            Con_dist[ii,ii:end,kk] = max.(Con_dist[ii,ii:end,kk],Para["Con_distMin"][kk])
-            Con_dist[ii,ii:end,kk] = min.(Con_dist[ii,ii:end,kk],Para["Con_distMax"][kk])
+        if !(kk in Para["FixedControl2"])
+            for jj = ii:Para["nTime"]
+                Con_dist[ii,jj,kk] = max.(Con_dist[ii,jj,kk],Para["Con_distMin"](Para["tmesh"][jj])[kk])
+                Con_dist[ii,jj,kk] = min.(Con_dist[ii,jj,kk],Para["Con_distMax"](Para["tmesh"][jj])[kk])
+            end
         end
     end
 end

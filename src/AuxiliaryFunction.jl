@@ -240,11 +240,11 @@ function LoadVariables(Para,Results)
 
     Con, Con_dist = ConInterpol(Results["Con"],Results["Con_dist"],Para)
 
-    for kk in Para["Reduce1"]
-        Con[:,:,kk] .= 0
+    for kk in Para["FixedControl1"]
+    #    Con[:,:,kk] .= 0
     end
-    for kk in Para["Reduce2"]
-        Con_dist[:,:,kk] .= 0
+    for kk in Para["FixedControl2"]
+    #    Con_dist[:,:,kk] .= 0
     end
 
     return Con, Con_dist
@@ -402,4 +402,17 @@ end
 
 function printNoSuccess(Para::Dict,Obj::Float64,Step)
     @printf("%g No success: ObjVal = %.4f, OptiStep=%.8f, OptiIter = %g, hStep = %.3f \n",Para["LineIter"],Obj, Step, Para["OptiIter"], Para["hstep"])
+end
+
+"""
+    wait_for_enter(Para::Dict)
+
+Function allowing the calculations to stop and wait for an input by the user
+"""
+function WaitForEnter(Para::Dict)
+    if Para["PlotResultsWaitForKey"]
+        println("Press Enter to continue...")
+        readuntil(stdin, '\n')
+        println("Continuing...")
+    end
 end

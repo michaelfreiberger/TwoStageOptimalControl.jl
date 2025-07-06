@@ -193,8 +193,10 @@ function Update(Con::Array{Float64,3},Con_dist::Array{Float64,3},Dir_u::Array{Fl
     Con_new .= Con + Step*Dir_u
     Con_dist_new .= Con_dist + Step*Dir_u_dist
     ConMapping(Con_new,Para)
-    for ii = 1:Para["nAge"]
-    ConMapping_dist(Con_dist_new,ii,Para)
+    if Para["nStat_dist"] > 0
+        for ii = 1:Para["nAge"]
+            ConMapping_dist(Con_dist_new,ii,Para)
+        end
     end
 
     state_PDE_solver(Con_new,Stat_new,Con_dist_new, Stat_dist_new, Stat_agg_new, Para)
@@ -250,9 +252,9 @@ function maxabsGradient(Con::Array{Float64,3},Con_dist::Array{Float64,3},dHam::A
     
     for ii = 1:Para["nTime"]
         for kk = 1:Para["nCon"]
-            if Con[1,ii,kk] >= Para["ConMin"][kk]
+            if Con[1,ii,kk] <= Para["ConMin"](Para["tmesh"][ii])[kk]
                 dHam_abs[1,ii,kk] = abs(max(dHam[1,ii,kk],0))
-            elseif Con[1,ii,kk] <= Para["ConMax"][kk]
+            elseif Con[1,ii,kk] >= Para["ConMax"](Para["tmesh"][ii])[kk]
                 dHam_abs[1,ii,kk] = abs(min(dHam[1,ii,kk],0))
             else
                 dHam_abs[1,ii,kk] = abs(dHam[1,ii,kk])
@@ -260,19 +262,21 @@ function maxabsGradient(Con::Array{Float64,3},Con_dist::Array{Float64,3},dHam::A
         end
     end
 
-    for ii = 1:Para["nTime"]
-        for jj = ii:Para["nTime"]
-            for kk = 1:Para["nCon_dist"]
-                if Con_dist[ii,jj,kk] <= Para["Con_distMin"][kk]
-                    dHam_dist_abs[ii,jj,kk] = abs(max(dHam_dist[ii,jj,kk],0))
-                elseif Con_dist[ii,jj,kk] >= Para["Con_distMax"][kk]
-                    dHam_dist_abs[ii,jj,kk] = abs(min(dHam_dist[ii,jj,kk],0))
-                else
-                    dHam_dist_abs[ii,jj,kk] = abs(dHam_dist[ii,jj,kk])
+    if Para["nStat_dist"] > 0
+        for ii = 1:Para["nTime"]
+            for jj = ii:Para["nTime"]
+                for kk = 1:Para["nCon_dist"]
+                    if Con_dist[ii,jj,kk] <= Para["Con_distMin"](Para["tmesh"][jj])[kk]
+                        dHam_dist_abs[ii,jj,kk] = abs(max(dHam_dist[ii,jj,kk],0))
+                    elseif Con_dist[ii,jj,kk] >= Para["Con_distMax"](Para["tmesh"][jj])[kk]
+                        dHam_dist_abs[ii,jj,kk] = abs(min(dHam_dist[ii,jj,kk],0))
+                    else
+                        dHam_dist_abs[ii,jj,kk] = abs(dHam_dist[ii,jj,kk])
+                    end
                 end
             end
-        end
-    end 
+        end 
+    end
 
     return max(maximum(dHam_abs),maximum(dHam_dist_abs))
 end

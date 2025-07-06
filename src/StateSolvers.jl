@@ -17,22 +17,24 @@ function state_PDE_solver(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dist:
     #   Solve for the first stage states and consumption
     HeunODE(Con,Stat,Para)
 
-    #   Initial values for second stage variables
-    ShockTransition(Con,Stat,Stat_dist,Para)
+    if Para["nStat_dist"] > 0
+        #   Initial values for second stage variables
+        ShockTransition(Con,Stat,Stat_dist,Para)
 
-    #   Loop in Time for vintage states jj
-    if Para["ParallelComputing"] == true
-        Threads.@threads for jj = 1:(Para["nTime"]-1)
-            HeunPDE(jj,Con_dist,Stat_dist,Para)
+        #   Loop in Time for vintage states jj
+        if Para["ParallelComputing"] == true
+            Threads.@threads for jj = 1:(Para["nTime"]-1)
+                HeunPDE(jj,Con_dist,Stat_dist,Para)
+            end
+        else
+            for jj = 1:(Para["nTime"]-1)
+                HeunPDE(jj,Con_dist,Stat_dist,Para)
+            end
         end
-    else
-        for jj = 1:(Para["nTime"]-1)
-            HeunPDE(jj,Con_dist,Stat_dist,Para)
-        end
+
+        #   Calculate aggregated variables
+        Aggregate(Con_dist,Stat_dist,Stat_agg,Para)
     end
-
-    #   Calculate aggregated variables
-    Aggregate(Con_dist,Stat_dist,Stat_agg,Para)
 end
 
 """
@@ -138,18 +140,20 @@ function costate_PDE_solver(Con::Array{Float64,3},Stat::Array{Float64,3},Con_dis
                             CoStat::Array{Float64,3},CoStat_dist::Array{Float64,3},CoStat_agg::Array{Float64,3},Para::Dict)
     #Solves the PDE for the Costate equations for given controls u_M and u_H and state variables
 
-    EndConstraintCoStat(Stat,CoStat,Para)
-    EndConstraintCoStat_dist(Stat_dist,CoStat_dist,Para)
-
-    if Para["ParallelComputing"] == true
-        Threads.@threads for jj = 1:(Para["nTime"]-1)
-            HeunPDEco(jj,Con_dist,Stat_dist,CoStat_dist,Para)
-        end
-    else
-        for jj = 1:(Para["nTime"]-1)
-            HeunPDEco(jj,Con_dist,Stat_dist,CoStat_dist,Para)
+    if Para["nStat_dist"] > 0
+        EndConstraintCoStat_dist(Stat_dist,CoStat_dist,Para)
+        if Para["ParallelComputing"] == true
+            Threads.@threads for jj = 1:(Para["nTime"]-1)
+                HeunPDEco(jj,Con_dist,Stat_dist,CoStat_dist,Para)
+            end
+        else
+            for jj = 1:(Para["nTime"]-1)
+                HeunPDEco(jj,Con_dist,Stat_dist,CoStat_dist,Para)
+            end
         end
     end
+
+    EndConstraintCoStat(Stat,CoStat,Para)
     HeunODEco(Con,Stat,CoStat,CoStat_dist,Para)
 end
 
