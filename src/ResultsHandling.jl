@@ -54,8 +54,10 @@ function PlotResultsIntermediate(Con::Array{Float64,3},Stat::Array{Float64,3},Co
         for kk = 1:Para["nCon"]
             if Con[1,ii,kk] <= Para["ConMin"](Para["tmesh"][ii])[kk]
                 SearchDir[1,ii,kk] = max(SearchDir[1,ii,kk],0)
+                dHam[1,ii,kk] = max(dHam[1,ii,kk],0)
             elseif Con[1,ii,kk] >= Para["ConMax"](Para["tmesh"][ii])[kk]
                 SearchDir[1,ii,kk] = min(SearchDir[1,ii,kk],0)
+                dHam[1,ii,kk] = min(dHam[1,ii,kk],0)
             end
         end
     end
@@ -65,8 +67,10 @@ function PlotResultsIntermediate(Con::Array{Float64,3},Stat::Array{Float64,3},Co
             for kk = 1:Para["nCon_dist"]
                 if Con_dist[ii,jj,kk] <= Para["Con_distMin"](Para["tmesh"][jj])[kk]
                     SearchDir_dist[ii,jj,kk] = max(SearchDir_dist[ii,jj,kk],0)
+                    dHam_dist[1,ii,kk] = max(dHam_dist[1,ii,kk],0)
                 elseif Con_dist[ii,jj,kk] >= Para["Con_distMax"](Para["tmesh"][jj])[kk]
                     SearchDir_dist[ii,jj,kk] = min(SearchDir_dist[ii,jj,kk],0)
+                    dHam_dist[1,ii,kk] = min(dHam_dist[1,ii,kk],0)
                 end
             end
         end

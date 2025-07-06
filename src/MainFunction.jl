@@ -93,7 +93,7 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
     else
         global SalvageFunction_1 = SalvageFunction1
     end
-    if !(SalvageFunction2(Stat_dist[1,1,:],Dict()) isa Number)
+    if !(SalvageFunction2(Stat_dist[1,1,:],Para) isa Number)
         global SalvageFunction_2 = (Stat,Para::Dict) -> 0.0
         println("Warning: Salvage Function (Stage 2) is not a number! Salvage Function is set to 0")
         SystemCheck = 0
