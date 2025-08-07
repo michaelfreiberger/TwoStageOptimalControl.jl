@@ -101,12 +101,6 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
         global SalvageFunction_2 = SalvageFunction2
     end
     
-    # Return error message if some dimensions do not match
-    if SystemCheck == 0
-        println("Calculations are terminated due to dimension mismatches!")
-        return
-    end
-   
     #-----------------------------------------------------------------------------------------------
     # Define the order of the integration method for the objective value and 
     # the aggregated variables
@@ -120,18 +114,33 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
         global Integral = integ4
     end
 
-
     #-----------------------------------------------------------------------------------------------
     # Load (interpolate) the supplied controls in the results dictionary
     if Para["LoadInits"] == true
         if all(in.(["Con", "Con_dist"],(keys(Results),)))
-            Con, Con_dist = LoadVariables(Para,Results)
+            if size(Results["Con"])[3] != Para["nCon"]
+                println("Warning: Dimensions of the Loaded Controls (Stage 1) do not match predefined dimension!")
+                SystemCheck = 0
+            end
+            if size(Results["Con_dist"])[3] != Para["nCon_dist"]
+                println("Warning: Dimensions of the Loaded Controls (Stage 2) do not match predefined dimension!")
+                SystemCheck = 0
+            end            
+            if SystemCheck != 0
+                Con, Con_dist = LoadVariables(Para,Results)
+            end            
         else
             println("Warning: Initial Values cannot be loaded. Con and/or Con_dist are not elemet of the dictionary.")
         end
     end
 
-
+    #------------------------------------------------------------------------
+    # Return error message if some dimensions do not match
+    if SystemCheck == 0
+        println("Calculations are terminated due to dimension mismatches!")
+        return
+    end
+   
 
     #------------------------------------------------------------------------
     #   Start Optimisation loops

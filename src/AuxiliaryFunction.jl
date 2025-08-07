@@ -237,16 +237,9 @@ end
 Load inital profiles for the control variables from the Results dictionary and use interpolation if necessary
 """
 function LoadVariables(Para,Results)
-
+    
     Con, Con_dist = ConInterpol(Results["Con"],Results["Con_dist"],Para)
-
-    for kk in Para["FixedControl1"]
-    #    Con[:,:,kk] .= 0
-    end
-    for kk in Para["FixedControl2"]
-    #    Con_dist[:,:,kk] .= 0
-    end
-
+        
     return Con, Con_dist
 end
 
@@ -257,60 +250,79 @@ Given Controls `Con_dist` and `Con`, ConInterpol performs an interpolation of th
 """
 function ConInterpol(Con::Array{Float64,3},Con_dist::Array{Float64,3},Para::Dict)
 
-    nAge_old, nTime_old, nCon_dist = size(Con_dist)
-    nCon = size(Con,3)
+    nAge_old_dist, nTime_old_dist, nCon_dist = size(Con_dist)
+    nAge_old,nTime_old,nCon = size(Con)
 
+    tmesh_old_dist = collect(0:(1/(nTime_old_dist-1)):1) * Para["T"]
+    amesh_old_dist = collect(0:(1/(nAge_old_dist-1)):1)  * Para["T"]
     tmesh_old = collect(0:(1/(nTime_old-1)):1) * Para["T"]
-    amesh_old = collect(0:(1/(nAge_old-1)):1)  * Para["T"]
-
+    
     Con_dist_new = zeros(Para["nAge"],Para["nTime"],nCon_dist)
     Con_new = zeros(1,Para["nTime"],nCon)
 
     #----------------------------
-    #   Interpolation
+    #   Interpolation first stage controls
     #----------------------------
 
     if nTime_old < Para["nTime"]
+        # Interpolation for non-distributed controls
+        if nTime_old < 5
+            SplineDegree = 1
+        else
+            SplineDegree = 3
+        end
+        for kk = 1:nCon
+            Con_new[1,:,kk] =evaluate(Spline1D(tmesh_old,Con[1,:,kk],k=SplineDegree),Para["tmesh"])
+        end
+    elseif nTime_old > Para["nTime"]
+        for kk = 1:nCon
+            Con_new[1,:,kk] =evaluate(Spline1D(tmesh_old,Con[1,:,kk],k=1),Para["tmesh"])
+        end
+    else
+        Con_new .= Con
+    end
+
+    #----------------------------
+    #   Interpolation second stage controls
+    #----------------------------
+
+    if nTime_old_dist < Para["nTime"]
         # Interpolation for distributed controls
         # Interpolation along the characteristic lines
-        factor = floor(Int,(Para["nTime"]-1)/(nTime_old-1))       # (1/(nTime_old-1))/(1/(Para["nTime-1))
+        factor = floor(Int,(Para["nTime"]-1)/(nTime_old_dist-1))       # (1/(nTime_old-1))/(1/(Para["nTime-1))
         for jj = 1:nCon_dist
             #   Along existing characteristics
-            for kk = 1:(nAge_old-1)
-                kk2 = 1+factor*(kk-1)
-                f1 = interp1(tmesh_old[kk:end],Con_dist[kk,kk:end,jj],method = "Spline",extrapolation = Line())
-                Con_dist_new[kk2,kk2:end,jj] = f1(Para["tmesh"][kk2:end])
+            for kk = 1:(nAge_old_dist-1)
+                kk2 = 1 + factor*(kk-1)
+                if size(Con_dist[kk,kk:end,jj],2) < 3
+                    SplineDegree = 1
+                else
+                    SplineDegree = 3
+                end
+                Con_dist_new[kk2,kk2:end,jj] = evaluate(Spline1D(tmesh_old_dist[kk:end],Con_dist[kk,kk:end,jj],k=SplineDegree),Para["tmesh"][kk2:end])
             end
             Con_dist_new[end,end,jj] = Con_dist[end,end,jj]
 
             for kk = 1:Para["nTime"]-2
-                f1 = interp1(Para["tmesh"][kk:2:end],diag(Con_dist_new[:,:,jj],kk-1)[1:2:end],method = "Spline",extrapolation = Line())
+                if length(Para["tmesh"][kk:2:end]) < 5
+                    SplineDegree = 1
+                else
+                    SplineDegree = 3
+                end
+                f1 = Spline1D(Para["tmesh"][kk:2:end],diag(Con_dist_new[:,:,jj],kk-1)[1:2:end],k=SplineDegree)
                 for mm = 1:Para["nTime"]+1-kk
-                    Con_dist_new[mm,mm+kk-1,jj] = f1(Para["tmesh"][mm+kk-1])
+                    Con_dist_new[mm,mm+kk-1,jj] = evaluate(f1,Para["tmesh"][mm+kk-1])
                 end
             end
-            
-            f1 = interp1(tmesh_old,Con_dist[:,end,jj],method = "Spline",extrapolation = Line())
-            Con_dist_new[:,end,jj] = f1(Para["tmesh"])
+            Con_dist_new[:,end,jj] = evaluate(Spline1D(tmesh_old_dist,Con_dist[:,end,jj],k=3),Para["tmesh"])
         end
-
-        # Interpolation for non-distributed controls
-        for jj = 1:nCon
-            f1 = interp1(tmesh_old,Con[1,:,jj],method = "Spline",extrapolation = Line())
-            Con_new[1,:,jj] = f1(Para["tmesh"])
-        end
-
-    elseif nTime_old > Para["nTime"]
+    elseif nTime_old_dist > Para["nTime"]
         for kk = 1:nCon_dist
-            Con_dist_new[:,:,kk] = evalgrid(Spline2D(amesh_old,tmesh_old,Con_dist[:,:,kk];kx=2,ky=2),Para["amesh"],Para["tmesh"])
-        end
-        for kk = 1:nCon
-            Con_new[1,:,kk] =evaluate(Spline1D(tmesh_old,Con[1,:,kk],k=2),Para["tmesh"])
+            Con_dist_new[:,:,kk] = evalgrid(Spline2D(amesh_old_dist,tmesh_old_dist,Con_dist[:,:,kk];kx=2,ky=2),Para["amesh"],Para["tmesh"])
         end
     else
-        return Con, Con_dist
+        Con_dist_new .= Con_dist
     end
-
 
     #------------------------------
     #   Control Mapping
@@ -410,9 +422,16 @@ end
 Function allowing the calculations to stop and wait for an input by the user
 """
 function WaitForEnter(Para::Dict)
+    # if Para["PlotResultsWaitForKey"]
+    #     println("Press Enter to continue...")
+    #     readuntil(stdin, '\n')
+    #     println("Continuing...")
+    # end
     if Para["PlotResultsWaitForKey"]
-        println("Press Enter to continue...")
-        readuntil(stdin, '\n')
-        println("Continuing...")
+        println(stdout, "Wait for Enter (Maybe hit it twice if it does not work)!")
+        read(stdin, 1)
+        while bytesavailable(stdin)>0 read(stdin, Char)
+        end 
+        println("\n Continuing...")
     end
 end

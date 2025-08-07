@@ -34,9 +34,9 @@ function ParametersBasics(Para,UserPara)
     # number of controls in second stage          
     Para2["nCon_dist"] = 2          
     # number of state varibales in first stage
-    Para2["nStat"] = 3           
+    Para2["nStat"] = 2           
     # number of state varibales in second stage                       
-    Para2["nStat_dist"] = 3 
+    Para2["nStat_dist"] = 2 
     
     # index of state variable describing the auxiliary variables in both stages
     Para2["ProbIndex"] = 1
@@ -267,18 +267,18 @@ function ParametersPlots(Para,UserPara)
     #= ------------------------------------------------------------
         Parameters for Plots
     ------------------------------------------------------------ =#
-    Para2["ControlLabelsLatex"] = [latexstring("u_",kk) for kk=1:Para["nCon"]]
+    Para2["ControlLabelsLatex"] = [latexstring("u_{",kk,"}") for kk=1:Para["nCon"]]
     Para2["ControlLabelsSimple"] = [string("u",kk) for kk=1:Para["nCon"]]
-    Para2["ControlDistLabelsLatex"] = [latexstring("v_",kk) for kk=1:Para["nCon_dist"]]
+    Para2["ControlDistLabelsLatex"] = [latexstring("v_{",kk,"}") for kk=1:Para["nCon_dist"]]
     Para2["ControlDistLabelsSimple"] = [string("v",kk) for kk=1:Para["nCon_dist"]]
-    Para2["StateLabelsLatex"] = [latexstring("x_",kk) for kk=1:Para["nStat"]]
+    Para2["StateLabelsLatex"] = [latexstring("x_{",kk,"}") for kk=1:Para["nStat"]]
     Para2["StateLabelsSimple"] = [string("x",kk) for kk=1:Para["nStat"]]
-    Para2["StateDistLabelsLatex"] = [latexstring("y_",kk) for kk=1:Para["nStat_dist"]]
+    Para2["StateDistLabelsLatex"] = [latexstring("y_{",kk,"}") for kk=1:Para["nStat_dist"]]
     Para2["StateDistLabelsSimple"] = [string("y",kk) for kk=1:Para["nStat_dist"]]
-    Para2["CoStateLabelsLatex"] = [latexstring("\\lambda_",kk) for kk=1:Para["nStat"]]
+    Para2["CoStateLabelsLatex"] = [latexstring("\\lambda_{",kk,"}") for kk=1:Para["nStat"]]
     Para2["CoStateLabelsSimple"] = [string("lambda",kk) for kk=1:Para["nStat"]]
-    Para2["CoStateDistLabelsLatex"] = [latexstring("\\xi_",kk) for kk=1:Para["nStat_dist"]]
-    Para2["CoStateDistLabelsSimple"] = [string("xi_",kk) for kk=1:Para["nStat_dist"]]
+    Para2["CoStateDistLabelsLatex"] = [latexstring("\\xi_{",kk,"}") for kk=1:Para["nStat_dist"]]
+    Para2["CoStateDistLabelsSimple"] = [string("xi",kk) for kk=1:Para["nStat_dist"]]
 
     Para2["nVintagePlot"] = 10                      # Number of vintages plotted for realtime solutions
     Para2["PlotResultsStart"] = true
