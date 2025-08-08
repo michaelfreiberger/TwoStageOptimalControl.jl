@@ -46,3 +46,7 @@ TwoStageOptimalControl.ConSmooth
 ```@docs
 TwoStageOptimalControl.GradSmooth
 ```
+
+```@docs
+TwoStageOptimalControl.WaitForEnter
+```

@@ -34,13 +34,13 @@ To solve this problem with our Toolbox, we can use the main function ```TwoStage
 
 ```julia-repl
 julia> Results = TwoStageOptimisation(UserParameters = MyPara,
-                                ObjectiveIntegrand = U, 
-                                AggregationFunction = Q,
-                                StateDynamic_1 = f1,
-                                StateDynamic_2 = f2, 
-                                Shock = g,
-                                SalvageFunction_1=S1,
-                                SalvageFunction_2=S2)
+                                ObjectiveIntegrand1 = U, 
+                                AggregationIntegrand2 = Q,
+                                StateDynamic1 = f1,
+                                StateDynamic2 = f2, 
+                                Shock12 = g,
+                                SalvageFunction1=S1,
+                                SalvageFunction2=S2)
 ```
 
 But first we need to define the functions ```U, Q, f1, f2, g, S1``` and ```S2``` as well as the dictionary ```MyPara```.

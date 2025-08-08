@@ -1,4 +1,4 @@
-#using TwoStageOptimalControl
+using TwoStageOptimalControl
 
 U(Con, Stat, t::Float64, Para::Dict) = Stat[1]^0.5 - Con[1]^2
 Q(Con,Stat, t::Float64,s::Float64, Para::Dict) = 0

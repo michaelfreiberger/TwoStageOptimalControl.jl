@@ -3,9 +3,16 @@ TwoStageOptimalControl.AssignResults
 ```
 
 ```@docs
-TwoStageOptimalControl.PlotResults
+TwoStageOptimalControl.AssignResultsFinal
 ```
 
+```@docs
+TwoStageOptimalControl.PlotResultsIntermediate
+```
+
+```@docs
+TwoStageOptimalControl.PlotResults
+```
 
 ```@docs
 TwoStageOptimalControl.SaveResults

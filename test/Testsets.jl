@@ -1,10 +1,10 @@
-using TwoStageOptimalControl
 using Test
+using TwoStageOptimalControl
 
 
 @testset "TestFirstStageSolution" begin
     # Test code for a test model without shock
-    ResultsFirstStage = LoadResults("test/TestModelFirstStage")
+    ResultsFirstStage = TwoStageOptimalControl.LoadResults("TestModelFirstStage")
     MyPara = deepcopy(ResultsFirstStage["Para"])
     MyPara["hstep"] = MyPara["hstepStart"]
     MyPara["PlotResultsStart"] = false
@@ -45,7 +45,7 @@ end
 
 @testset "TestModel" begin
     # Test code for a test model without shock
-    ResultsBenchmark = LoadResults("test/TestModelBenchmark")
+    ResultsBenchmark = TwoStageOptimalControl.LoadResults("TestModelBenchmark")
     MyPara = deepcopy(ResultsBenchmark["Para"])
     MyPara["hstep"] = MyPara["hstepStart"]
     MyPara["PlotResultsStart"] = false
@@ -89,7 +89,7 @@ end
 @testset "TestModel 2" begin
     # Test code for a capital accumulation model without shock
 
-    ResultsBenchmark = LoadResults("test/TestModelBenchmark2")
+    ResultsBenchmark = LoadResults("TestModelBenchmark2")
 
     MyPara = deepcopy(ResultsBenchmark["Para"])
     MyPara["hstep"] = MyPara["hstepStart"]
