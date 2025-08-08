@@ -20,6 +20,8 @@ jobs:
         version:
           - '1.11'
           - 'nightly'
+        allow_failures:
+         - julia_version: nightly
         os:
           - ubuntu-latest
         arch:
