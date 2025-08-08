@@ -1,7 +1,7 @@
 #using TwoStageOptimalControl
 
 U(Con, Stat, t::Float64, Para::Dict) = Stat[2]*(Stat[1]^0.5 - Con[1]^2)
-Q(Con,Stat, t::Float64,s::Float64, Para::Dict) = 1*Stat[2]*(Stat[1]^0.5 - Con[1]^2)
+Q(Con, Stat, t::Float64,s::Float64, Para::Dict) = Stat[2]*(Stat[1]^0.5 - Con[1]^2)
 
 f1(Con,Stat, t::Float64, Para::Dict) = [Con[1] - 0.1*Stat[1],
                                         -0.5*Stat[2]]
@@ -38,7 +38,7 @@ MyPara["LoadInits"] = true
 Results = Dict()
 Results["Con"] = 4.0*ones(1,100,1)
 Results["Con_dist"] = 4.0*ones(100,100,1)
-Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
+Results = TwoStageOptimalControl.TwoStageOptimisation(Results = Results,UserParameters = MyPara,
                                 ObjectiveIntegrand1 = U, 
                                 AggregationIntegrand2 = Q,
                                 StateDynamic1 = f1,
@@ -47,7 +47,6 @@ Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
                                 SalvageFunction1 = S1,
                                 SalvageFunction2 = S2,
 )
-
-SaveResults(Results,"test/TestModelBenchmark")
+TwoStageOptimalControl.SaveResults(Results,"test/TestModelBenchmark")
 
 

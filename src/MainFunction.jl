@@ -43,6 +43,7 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
             Para[kk] = UserParameters[kk]
         end
     end
+    Para["hstepStart"] = Para["hstep"]
 
     # Initialize the control, state and costate variables
     Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,CoStat_agg = InitVariables(Para)
@@ -141,7 +142,6 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
         return
     end
    
-
     #------------------------------------------------------------------------
     #   Start Optimisation loops
     Para["HstepIter"] = 1
@@ -185,7 +185,6 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
             # Wait for user key if specified
             WaitForEnter(Para)
         end
-
 
         impr = 1
         maxabsgradient = Inf
@@ -241,10 +240,6 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
             Para["UpperLineStep"] = Para["UpperLineStep"] * 1
             Step = max(Step,Para["InitLineStep"])
             StopOuterIteration = 0
-            # if the smallest step-size is reached, use the original gradient for the linesearch without adjustment
-            if Para["hstep"]/2 <= Para["hLowBound"] 
-                #Para["OptiType"] = "Gradient"
-            end
         else
             StopOuterIteration = 1
         end
@@ -257,10 +252,10 @@ function TwoStageOptimisation(;Results=Dict(),UserParameters=Dict(),
     ObjValue = ObjectValue(Con,Stat,Con_dist,Stat_dist,Stat_agg,Para)
     costate_PDE_solver(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,CoStat_agg,Para)
     GradHamiltonian(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
-    Para["OptiType"] = "Gradient"
-    NewDirection(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,dHam,dHam_dist,Para)
-
-    AssignResults(Results, Con, Stat, Con_dist, Stat_dist, Stat_agg, CoStat, CoStat_dist, dHam, dHam_dist, Para)
+    SearchDir = deepcopy(dHam)
+    SearchDir_dist = deepcopy(dHam_dist)
+    NewDirection(Con,Stat,Con_dist,Stat_dist,Stat_agg,CoStat,CoStat_dist,SearchDir,SearchDir_dist,Para)
+    AssignResultsFinal(Results, Con, Stat, Con_dist, Stat_dist, Stat_agg, CoStat, CoStat_dist, dHam, dHam_dist,SearchDir,SearchDir_dist, Para)
     if Para["PlotResultsFinal"] == true
         PlotResults(Results;SavePlot = Para["SavePlot"])
     end
