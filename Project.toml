@@ -43,7 +43,7 @@ Profile = "1.11.0"
 SafeTestsets = "0.1"
 Serialization = "1.11.0"
 StaticArrays = "1.9.14"
-julia = "1"
+julia = "1.11"
 
 [extras]
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
