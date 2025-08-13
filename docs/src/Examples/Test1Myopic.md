@@ -54,7 +54,7 @@ julia> MyPara["nStat_dist"] = 2
 We can then use the option to set the parameters "FixedControl1" equal to a list of all dimensions of the model (in this case just 1)
 
 ```julia-repl
-Para2["FixedControl1"] = [1]
+julia> Para2["FixedControl1"] = [1]
 ```
 
 If we now provide the optimal solution of the first-stage-only solution as an initial guess to the solver, this solution will not be changed in the process. We just need to define the initial guess for the second stage solution:
