@@ -14,7 +14,8 @@ makedocs(
         "Model Functions" => "Functions/ModelFunctions.md",
         "State Solvers" => "Functions/StateSolvers.md",
         "Example 1" => "Examples/Test1.md",
-        "Example 2" => "Examples/Test3.md",
+        "Example 1 Myopic" => "Examples/Test1Myopic.md",
+        "Example 2" => "Examples/Test2.md",
                ]
         )
 
