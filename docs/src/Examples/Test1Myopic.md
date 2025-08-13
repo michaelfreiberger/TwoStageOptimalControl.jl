@@ -1,6 +1,6 @@
 # Capital accumulation problem for a myopic planer
 
-We can also use the solver to solve the capital accumulation problem from [Example 1](Examples/Test1.md) for a myopic planer. Myopic planer means that the planer is not aware of the risk of a shock occuring and behaves accordingly. However, once the shock has occured the planer adjusts its behaviour according to the new system.
+We can also use the solver to solve the capital accumulation problem from [Example 1](Test1.md) for a myopic planer. Myopic planer means that the planer is not aware of the risk of a shock occuring and behaves accordingly. However, once the shock has occured the planer adjusts its behaviour according to the new system.
 
 ## First stage solution
 
@@ -13,7 +13,7 @@ julia> MyPara["nStat_dist"] = 0
 
 Note, that we could theoretically also reduce the dimensions of the state variables by 1, as we do not need to model the survival probability in this scenario. However, calculating and following the dynamics of one additional state variable does not significantly increase the computation effort and first and foremost has no effect on the optimal solution.
 
-After defining the functions for the first stage as in [Example 1](Examples/Test1.md)
+After defining the functions for the first stage as in [Example 1](Test1.md)
 ```julia-repl
 julia> U(Con, Stat, t::Float64, Para::Dict) = Stat[2]*(Stat[1]^0.5 - Con[1]^2)
 julia> f1(Con,Stat, t::Float64, Para::Dict) = [Con[1] - Para["delta"]*Stat[1]]
@@ -38,7 +38,7 @@ julia> Results = TwoStageOptimisation(Results = Results,UserParameters = MyPara,
 
 ## Second stage solution
 
-For the optimal reactions after the shock, we can follow the strategy below. First, we again define the system dynamics of the second stage as in [Example 1](Examples/Test1.md).
+For the optimal reactions after the shock, we can follow the strategy below. First, we again define the system dynamics of the second stage as in [Example 1](Test1.md).
 
 ```julia-repl
 julia> Q(Con,Stat, t::Float64,s::Float64, Para::Dict) = Stat[2]*(Stat[1]^0.5 - Con[1]^2)

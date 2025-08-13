@@ -9,7 +9,7 @@ The following subsections are structured identical to the position of function d
 
 The most important functions for simple usage are contained in the following three subsections:
 
-- [Main function for usage:](Functions/MainFunction.md) This section contains the function ```TwoStageOptimisation```, which is used to solve a given problem. For examples on how to use it, see [example 1](Examples/Test1.md) and [example 2](Examples/Test2.md).
+- [Main function for usage:](Functions/MainFunction.md) This section contains the function ```TwoStageOptimisation```, which is used to solve a given problem. For examples on how to use it, see [example 1](Examples/Test1.md), [example 2](Examples/Test1Myopic.md), and [example 3](Examples/Test2.md).
 
 - [Parameters, Variables, Settings:](Functions/ParametersVariablesSettings.md) In this section all parameters and settings for the solution algorithm are described.
 
