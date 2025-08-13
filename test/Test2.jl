@@ -35,8 +35,6 @@ MyPara["InitStat"] = [0.1,1.0]
 MyPara["ConMin"] = (t) -> [0.0]
 MyPara["Con_distMin"] = (t) -> [0.0]
 
-
-MyPara["OptiType"] = "Newton-Raphson"
 MyPara["ProbIndex"] = 2
 MyPara["InitLineStep"] = 1e-5
 MyPara["UpperLineStep"] = 1e-1

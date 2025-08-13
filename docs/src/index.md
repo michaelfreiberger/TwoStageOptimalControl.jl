@@ -29,6 +29,8 @@ The remaining subsections contains the documentation for functions used within t
 
 As an example often says more then 1000 explanations, please find two examples for the usage of the toolbox below.
 
- - [Example 1](Examples/Test1.md)
+ - [Example 1 - Capital accumulation problem](Examples/Test1.md)
 
- - [Example 2](Examples/Test2.md)
+ - [Example 2 - Capital accumulation problem with a myopic decision maker](Examples/Test1Myopic.md)
+
+ - [Example 2 - A second capital accumulation problem](Examples/Test2.md)

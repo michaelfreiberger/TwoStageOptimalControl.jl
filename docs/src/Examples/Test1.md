@@ -78,8 +78,8 @@ julia> MyPara["nStat_dist"] = 2
 #### Control boundaries and initial state values
 
 ```julia-repl
-julia> MyPara["ConMin"] = [0.0]
-julia> MyPara["Con_distMin"] = [0.0]
+julia> MyPara["ConMin"] = t-> [0.0]
+julia> MyPara["Con_distMin"] = t->[0.0]
 julia> MyPara["InitStat"] = [0.1,1.0]
 ```
 
