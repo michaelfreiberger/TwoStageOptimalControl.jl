@@ -86,10 +86,10 @@ The algorithm uses a gradient based approach following a sequence of steps:
 
 ## **Two-stage optimal control problems with random switching time**
 
-This package is based on a project about the solution of two-stage optimal control problems with random switching time. This problem class takes the following form:
+This package is based on a project about the solution of two-stage optimal control problems with random switching time. This problem class takes the following form (with $\mathbb{E}$ being the expected value with respect to $\tau$):
 
 $$ 
-\max_{C_1: [0,T]\to\mathbb{R}^{n_1}}\mathbb{E}_{\tau}\int_{0}^{\tau} \exp(-\rho t) F_1(t,C_1(t),S_1(t)) dt + \exp(-\rho\tau)V^*(\tau,C_1(\tau),S_1(\tau))
+\max_{C_1: [0,T]\to\mathbb{R}^{n_1}}\mathbb{E}\int_{0}^{\tau} \exp(-\rho t) F_1(t,C_1(t),S_1(t)) dt + \exp(-\rho\tau)V^*(\tau,C_1(\tau),S_1(\tau))
 $$
 
 $$
