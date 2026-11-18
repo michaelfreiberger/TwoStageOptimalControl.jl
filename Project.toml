@@ -1,7 +1,7 @@
 name = "TwoStageOptimalControl"
 uuid = "34993466-7ea3-4614-b7d5-56f6e9aee333"
-authors = ["Michael Freiberger"]
 version = "0.2.0"
+authors = ["Michael Freiberger"]
 
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
@@ -35,7 +35,7 @@ Documenter = "1"
 FileIO = "1.16"
 ForwardDiff = "0.10.34, 1"
 Interpolations = "0.14.7, 0.16"
-JLD2 = "0.4.29, 0.5.15"
+JLD2 = "0.4.29, 0.5.15, 0.6"
 LaTeXStrings = "1.3.0"
 LinearAlgebra = "1.11.0"
 PackageCompatUI = "1.0.4"
